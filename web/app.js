@@ -65,6 +65,34 @@ const riskLabel = {
   high: "高風險"
 };
 
+const aiLayerLabel = {
+  Knowledge: "Knowledge 知識層",
+  Automation: "Automation 自動化層",
+  Agents: "Agents 智能體層",
+  Robotics: "Robotics 機器人協作層",
+  "Control Tower": "Control Tower 控制塔層",
+  Control_Tower: "Control Tower 控制塔層",
+  Safety: "Safety 人審與合規層"
+};
+
+const logisticsLineLabel = {
+  Inbound: "Inbound 入庫",
+  Warehouse: "Warehouse 倉庫",
+  Outbound: "Outbound 出庫",
+  Customs: "Customs 關務",
+  Customer: "Customer 客服",
+  Finance: "Finance 財務"
+};
+
+function normalizeList(value) {
+  if (Array.isArray(value)) return value.filter(Boolean);
+  if (!value) return [];
+  return String(value)
+    .split(/[,|]/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 const reviewQueue = [
   {
     title: "20 個寶藏 Skills 文章",
@@ -442,6 +470,18 @@ function loadRepoArticles() {
     id: article.id,
     title: article.title,
     source: article.source,
+    url: article.url,
+    category: article.category,
+    logisticsLine: normalizeList(article.logisticsLine),
+    aiLayer: normalizeList(article.aiLayer),
+    vegoPriority: article.vegoPriority || "D",
+    reviewOwner: article.reviewOwner || "",
+    language: article.language || "",
+    summaryZh: article.summaryZh || "",
+    summaryEn: article.summaryEn || "",
+    vegoUseCase: normalizeList(article.vegoUseCase),
+    tags: normalizeList(article.tags),
+    riskLevel: article.riskLevel || "",
     body: article.body,
     status: article.status || "repo",
     readonly: true
@@ -519,6 +559,37 @@ function renderArticleAnalysis(article, analysis) {
   `;
 }
 
+function articleRiskClass(article, analysis) {
+  const risk = article.riskLevel || analysis.risk || "low";
+  if (/high|customs|payment|approval|sensitive|production/i.test(risk)) return "high";
+  if (/sandbox|medium|human/i.test(risk)) return "medium";
+  return "low";
+}
+
+function fillArticleFilterOptions() {
+  const articles = [...loadArticles(), ...loadRepoArticles()];
+  const config = [
+    ["#articleLayerFilter", articles.flatMap((article) => normalizeList(article.aiLayer || article.category)), aiLayerLabel],
+    ["#articleLineFilter", articles.flatMap((article) => normalizeList(article.logisticsLine)), logisticsLineLabel],
+    ["#articlePriorityFilter", articles.map((article) => article.vegoPriority).filter(Boolean), {}],
+    ["#articleStatusFilter", articles.map((article) => article.status).filter(Boolean), {}],
+    ["#articleRiskFilter", articles.map((article) => article.riskLevel).filter(Boolean), {}]
+  ];
+  config.forEach(([selector, values, labels]) => {
+    const select = document.querySelector(selector);
+    if (!select) return;
+    const current = select.value;
+    const first = select.querySelector("option")?.outerHTML || `<option value="all">All</option>`;
+    const unique = [...new Set(values.filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b), "zh-Hant"));
+    select.innerHTML =
+      first +
+      unique
+        .map((value) => `<option value="${escapeHtml(value)}">${escapeHtml(labels[value] || value)}</option>`)
+        .join("");
+    if ([...select.options].some((option) => option.value === current)) select.value = current;
+  });
+}
+
 function setDraft(article) {
   const analysis = analyzeArticle(article);
   currentDraft = createSkillDraft(article, analysis);
@@ -530,23 +601,75 @@ function setDraft(article) {
 function renderArticleLibrary() {
   const grid = document.querySelector("#articleLibrary");
   const articles = [...loadArticles(), ...loadRepoArticles()];
+  fillArticleFilterOptions();
   if (!articles.length) {
     grid.innerHTML = `<article class="article-card"><h4>尚未收藏文章</h4><p>貼上文章或上傳 .txt/.md 後，這裡會出現閱讀與 Skill 轉換隊列。</p></article>`;
     return;
   }
-  grid.innerHTML = articles
+  const query = document.querySelector("#articleSearch")?.value.trim().toLowerCase() || "";
+  const layer = document.querySelector("#articleLayerFilter")?.value || "all";
+  const line = document.querySelector("#articleLineFilter")?.value || "all";
+  const priority = document.querySelector("#articlePriorityFilter")?.value || "all";
+  const status = document.querySelector("#articleStatusFilter")?.value || "all";
+  const risk = document.querySelector("#articleRiskFilter")?.value || "all";
+  const visible = articles.filter((article) => {
+    const layers = normalizeList(article.aiLayer || article.category);
+    const lines = normalizeList(article.logisticsLine);
+    const tags = normalizeList(article.tags);
+    const haystack = [
+      article.title,
+      article.source,
+      article.category,
+      article.status,
+      article.riskLevel,
+      article.summaryZh,
+      article.summaryEn,
+      article.body,
+      ...layers,
+      ...lines,
+      ...tags,
+      ...normalizeList(article.vegoUseCase)
+    ]
+      .join(" ")
+      .toLowerCase();
+    return (
+      (!query || haystack.includes(query)) &&
+      (layer === "all" || layers.includes(layer) || article.category === layer) &&
+      (line === "all" || lines.includes(line)) &&
+      (priority === "all" || article.vegoPriority === priority) &&
+      (status === "all" || article.status === status) &&
+      (risk === "all" || article.riskLevel === risk)
+    );
+  });
+  grid.innerHTML = visible
     .map((article) => {
       const analysis = analyzeArticle(article);
+      const layers = normalizeList(article.aiLayer || article.category);
+      const lines = normalizeList(article.logisticsLine);
+      const tags = normalizeList(article.tags);
+      const useCases = normalizeList(article.vegoUseCase);
+      const riskClass = articleRiskClass(article, analysis);
       return `
         <article class="article-card">
           <div>
             <span class="tag">${escapeHtml(article.status)}</span>
-            <span class="risk ${analysis.risk}">${riskLabel[analysis.risk]}</span>
+            <span class="risk ${riskClass}">${escapeHtml(article.riskLevel || riskLabel[analysis.risk])}</span>
             <span class="status">${analysis.skillCandidates.length} candidates</span>
+            ${article.vegoPriority ? `<span class="status">Priority ${escapeHtml(article.vegoPriority)}</span>` : ""}
           </div>
           <h4>${escapeHtml(article.title)}</h4>
-          <p>${escapeHtml(article.source || "未填來源")}</p>
-          <p>${escapeHtml(article.body.slice(0, 130))}${article.body.length > 130 ? "..." : ""}</p>
+          <p>${escapeHtml(article.source || "未填來源")}${article.url ? ` · ${escapeHtml(article.url)}` : ""}</p>
+          <p>${escapeHtml(article.summaryZh || article.body.slice(0, 150))}${!article.summaryZh && article.body.length > 150 ? "..." : ""}</p>
+          <div class="article-meta">
+            ${layers.map((item) => `<span>${escapeHtml(aiLayerLabel[item] || item)}</span>`).join("")}
+            ${lines.map((item) => `<span>${escapeHtml(logisticsLineLabel[item] || item)}</span>`).join("")}
+          </div>
+          ${
+            useCases.length
+              ? `<p><strong>VEGO Use Case:</strong> ${useCases.slice(0, 3).map(escapeHtml).join("；")}</p>`
+              : ""
+          }
+          ${tags.length ? `<div class="article-tags">${tags.slice(0, 10).map((item) => `<span>#${escapeHtml(item)}</span>`).join("")}</div>` : ""}
           <div class="article-actions">
             <button class="button" type="button" data-article-draft="${article.id}">生成草稿</button>
             ${article.readonly ? "" : `<button class="button" type="button" data-article-delete="${article.id}">移除</button>`}
@@ -554,7 +677,7 @@ function renderArticleLibrary() {
         </article>
       `;
     })
-    .join("");
+    .join("") || `<article class="article-card"><h4>沒有符合條件的文章</h4><p>請調整 AI Layer、物流主線、Priority、Status、Risk 或搜尋關鍵字。</p></article>`;
 }
 
 function downloadDraft() {
@@ -750,6 +873,12 @@ document.querySelector("#statusFilter").addEventListener("change", renderSkills)
 document.querySelector("#articleForm").addEventListener("submit", handleArticleSubmit);
 document.querySelector("#articleFile").addEventListener("change", handleArticleFile);
 document.querySelector("#clearArticleForm").addEventListener("click", clearArticleForm);
+document.querySelector("#articleSearch").addEventListener("input", renderArticleLibrary);
+document.querySelector("#articleLayerFilter").addEventListener("change", renderArticleLibrary);
+document.querySelector("#articleLineFilter").addEventListener("change", renderArticleLibrary);
+document.querySelector("#articlePriorityFilter").addEventListener("change", renderArticleLibrary);
+document.querySelector("#articleStatusFilter").addEventListener("change", renderArticleLibrary);
+document.querySelector("#articleRiskFilter").addEventListener("change", renderArticleLibrary);
 document.querySelector("#downloadDraft").addEventListener("click", downloadDraft);
 document.querySelector("#sourceForm").addEventListener("submit", handleSourceSubmit);
 document.querySelector("#clearSourceForm").addEventListener("click", clearSourceForm);

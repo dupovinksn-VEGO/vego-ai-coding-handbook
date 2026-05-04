@@ -37,12 +37,31 @@ function parseFrontmatter(text) {
   if (end === -1) return {};
   const block = text.slice(3, end).trim();
   const data = {};
+  let currentKey = "";
   for (const line of block.split(/\r?\n/)) {
+    const listMatch = line.match(/^\s*-\s*(.*)$/);
+    if (listMatch && currentKey) {
+      data[currentKey] = Array.isArray(data[currentKey]) ? data[currentKey] : [];
+      data[currentKey].push(listMatch[1].replace(/^"|"$/g, ""));
+      continue;
+    }
     const match = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
     if (!match) continue;
-    data[match[1]] = match[2].replace(/^"|"$/g, "");
+    currentKey = match[1];
+    const value = match[2].trim();
+    data[currentKey] = value ? value.replace(/^"|"$/g, "") : [];
   }
   return data;
+}
+
+function listField(value) {
+  if (Array.isArray(value)) return value.filter(Boolean);
+  if (!value) return [];
+  return String(value)
+    .replace(/^\[|\]$/g, "")
+    .split(/[,|]/)
+    .map((item) => item.trim().replace(/^"|"$/g, ""))
+    .filter(Boolean);
 }
 
 function firstHeading(markdown, fallback) {
@@ -234,7 +253,19 @@ async function articleData() {
         id: file.replace(/\\/g, "/"),
         title: frontmatter.title || firstHeading(markdown, "Untitled article"),
         source: frontmatter.source || "",
+        url: frontmatter.url || "",
+        category: frontmatter.category || listField(frontmatter.ai_layer)[0] || "Knowledge",
+        logisticsLine: listField(frontmatter.logistics_line),
+        aiLayer: listField(frontmatter.ai_layer),
+        vegoPriority: frontmatter.vego_priority || "D",
         status: frontmatter.status || "sandbox",
+        reviewOwner: frontmatter.review_owner || "",
+        language: frontmatter.language || "",
+        summaryZh: frontmatter.summary_zh || "",
+        summaryEn: frontmatter.summary_en || "",
+        vegoUseCase: listField(frontmatter.vego_use_case),
+        tags: listField(frontmatter.tags),
+        riskLevel: frontmatter.risk_level || riskFromText(markdown, frontmatter.status || "sandbox"),
         body: stripFrontmatter(markdown).slice(0, 1200),
         path: relative(process.cwd(), file).replace(/\\/g, "/")
       };

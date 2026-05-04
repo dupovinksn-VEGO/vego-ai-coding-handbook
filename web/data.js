@@ -1,5 +1,5 @@
 window.VEGO_DATA = {
-  "generatedAt": "2026-05-04T23:24:38.603Z",
+  "generatedAt": "2026-05-04T23:41:08.628Z",
   "handbook": [
     {
       "index": "00",
@@ -240,6 +240,16 @@ window.VEGO_DATA = {
       "path": "content/skills/logistics-agent-domain-planner/SKILL.md"
     },
     {
+      "name": "logistics-article-classifier",
+      "author": "VEGO",
+      "category": "VEGO Skill",
+      "description": "將物流 AI、AI Agent、WMS/TMS、倉庫自動化、Control Tower、關務合規文章轉成 VEGO 智庫分類卡。Use when classifying articles for the VEGO AI Logistics Knowledge Base.",
+      "status": "approved",
+      "risk": "low",
+      "url": "",
+      "path": "content/skills/logistics-article-classifier/SKILL.md"
+    },
+    {
       "name": "logistics-exception-management",
       "author": "VEGO",
       "category": "VEGO Skill",
@@ -322,10 +332,67 @@ window.VEGO_DATA = {
   ],
   "articles": [
     {
+      "id": "content/articles/VEGO_AI_Logistics_Knowledge_Base_Article_Classification_v1.md",
+      "title": "VEGO AI Logistics Knowledge Base 推薦文章分類整理 v1.0",
+      "source": "VEGO Internal",
+      "url": "internal://vego-ai-logistics-article-classification-v1",
+      "category": "Knowledge",
+      "logisticsLine": [
+        "Inbound",
+        "Warehouse",
+        "Outbound",
+        "Customs",
+        "Customer",
+        "Finance"
+      ],
+      "aiLayer": [
+        "Knowledge",
+        "Automation",
+        "Agents",
+        "Robotics",
+        "Control Tower",
+        "Safety"
+      ],
+      "vegoPriority": "A",
+      "status": "Sandbox",
+      "reviewOwner": "Vinny",
+      "language": "Traditional Chinese / English",
+      "summaryZh": "建立 VEGO AI 物流智庫文章分類系統，讓文章能從摘要沉澱為 SOP、Skill、Agent 與 VEGO OPS 功能。",
+      "summaryEn": "Classification schema for turning logistics AI articles into VEGO insights, SOPs, skills, agents, and OPS features.",
+      "vegoUseCase": [
+        "Article to Summary to VEGO Insight",
+        "SOP and Skill conversion",
+        "Agent and OPS feature planning"
+      ],
+      "tags": [
+        "knowledge-base",
+        "article-classification",
+        "logistics-ai",
+        "agentic-ai",
+        "control-tower",
+        "customs-compliance"
+      ],
+      "riskLevel": "low-risk-reading",
+      "body": "# VEGO AI Logistics Knowledge Base\n# 推薦文章分類整理 v1.0\n\n## Purpose / 目的\n\n本文件用於整理 VEGO AI Coding Handbook 智庫 v1 版本的文章分類邏輯，並將 AI 智能物流、AI Agent、WMS/TMS、倉庫自動化、Control Tower、Customs Compliance 等推薦文章，按照 VEGO 現有智庫分類進行歸檔。\n\n目標不是單純收藏文章，而是建立一套可持續沉澱的知識系統：\n\n```text\nArticle / Source\n-> Summary\n-> VEGO Insight\n-> SOP\n-> Skill\n-> Agent\n-> VEGO OPS System Feature\n```\n\n## 1. VEGO 智庫主分類架構\n\n### 1.1 AI Capability Layers / AI 能力分層\n\n```text\n01_Knowledge\n02_Automation\n03_Agents\n04_Robotics\n05_Control_Tower\n06_Safety\n```\n\n| Layer | 中文名稱 | 說明 |\n| --- | --- | --- |\n| Knowledge | 知識層 | 收藏產業趨勢、研究報告、AI 物流文章、案例、SOP、系統截圖、錯誤案例 |\n| Automation | AI 自動化層 | 文件抽取、狀態比對、異常分類、報表生成、回覆草稿 |\n| Agents | 智能體層 | Pre-alert Agent、Dispatch Agent、POD Agent、Billing Agent、Compliance Agent |\n| Robotics | 機器人協作層 | Warehouse AI、Computer Vision、Physical AI、RFID、Barcode、Pallet Tracking |\n| Control Tower | 物流 AGI 控制塔層 | 多 Agent 協作、跨流程監控、異常升級、可視化、決策輔助 |\n| Safety | 人審與合規層 | 關務、付款、對客承諾、資料刪除、生產寫入、外部訊息輸出的人審閘口 |\n\n### 1.2 Logistics Business Lines / 物流主線\n\n```text\nInbound\nWarehouse\nOutbound\nCustoms\nCustomer\nFinance\n```\n\n| Business Line | 中文名稱 | VEGO 對應內容 |\n| --- | --- | --- |\n| Inbound | 入庫 / 海櫃預報 | Pre-alert、DO、PL、Container、Drayage、Devanning |\n| Wareho",
+      "path": "content/articles/VEGO_AI_Logistics_Knowledge_Base_Article_Classification_v1.md"
+    },
+    {
       "id": "content/articles/2026-05-04-20-treasure-skills.md",
       "title": "最值得推薦的 20 個寶藏 Skills - VEGO 收藏摘要",
       "source": "使用者提供文章內容；原文作者：沃垠AI；發布日期：2026-05-02",
+      "url": "",
+      "category": "Knowledge",
+      "logisticsLine": [],
+      "aiLayer": [],
+      "vegoPriority": "D",
       "status": "sandbox",
+      "reviewOwner": "",
+      "language": "",
+      "summaryZh": "",
+      "summaryEn": "",
+      "vegoUseCase": [],
+      "tags": [],
+      "riskLevel": "medium",
       "body": "# 最值得推薦的 20 個寶藏 Skills - VEGO 收藏摘要\n\n## 收藏目的\n\n這篇文章適合作為 VEGO AI Coding 寶典的第一批外部 Skill 雷達樣本。它涵蓋中文創作、深度研究、設計配圖、PPT、知識管理、資料分析、翻譯、創業與工程化 coding workflow。\n\n## GitHub 來源\n\n- https://github.com/lijigang/ljg-skills\n- https://github.com/alchaincyf/huashu-skills\n- https://github.com/freestylefly/canghe-skills\n- https://github.com/kangarooking/kangarooking-skills\n- https://github.com/lengyi2030/Auto-wechat-writing\n- https://github.com/KKKKhazix/khazix-skills\n- https://github.com/larashero3-dotcom/soul.skill\n- https://github.com/blockpanda/any2html\n- https://github.com/joeseesun/qiaomu-info-card-designer\n- https://github.com/op7418/guizang-ppt-skill\n- https://github.com/pbakaus/impeccable\n- https://github.com/xiaohuailabs/tacit-mining\n- https://github.com/kepano/obsidian-skills\n- https://github.com/coffeefuelbump/csv-data-summarizer-claude-skill\n- https://github.com/deusyu/translate-book\n- https://github.com/slavingia/skills\n- https://github.com/ReScienceLab/opc-skills\n- https://github.com/mattpocock/skills\n- https://github.com/jnMetaCode/superpowers-zh\n\n## Skill 候選\n\n- ljg-skills\n- huashu-skills\n- canghe-skills\n- kangarooking-skills\n- Auto-WeChat-Writing\n- khazix-writer\n- hv-analysis\n- soul.skill",
       "path": "content/articles/2026-05-04-20-treasure-skills.md"
     }

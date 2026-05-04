@@ -52,7 +52,7 @@
         </div>
         <div class="status-panel" aria-label="Project status">
           <div>
-            <span class="metric">13</span>
+            <span class="metric">17</span>
             <span>寶典章節</span>
           </div>
           <div>
@@ -239,6 +239,24 @@
             你可以貼文章或上傳 `.txt/.md`，先放進閱讀庫；系統會抽取 GitHub 連結、Skill 候選與審核摘要，
             生成可下載的 Sandbox Skill 草稿。
           </p>
+        </div>
+        <div class="toolbar article-filterbar" role="search">
+          <input id="articleSearch" type="search" placeholder="搜尋文章、來源、摘要、Tag..." />
+          <select id="articleLayerFilter" aria-label="Article AI layer filter">
+            <option value="all">全部 AI Layer</option>
+          </select>
+          <select id="articleLineFilter" aria-label="Article logistics line filter">
+            <option value="all">全部物流主線</option>
+          </select>
+          <select id="articlePriorityFilter" aria-label="Article priority filter">
+            <option value="all">全部 Priority</option>
+          </select>
+          <select id="articleStatusFilter" aria-label="Article status filter">
+            <option value="all">全部狀態</option>
+          </select>
+          <select id="articleRiskFilter" aria-label="Article risk filter">
+            <option value="all">全部風險</option>
+          </select>
         </div>
         <div class="collector-layout">
           <form id="articleForm" class="collector-form">

@@ -24,7 +24,19 @@ const checks = [
       "機器人協作層"
     ]
   ],
-  ["web/index.html", ["AI Coding 文章搜集區", "articleForm", "skillDraftPreview"]],
+  [
+    "web/index.html",
+    [
+      "AI Coding 文章搜集區",
+      "articleForm",
+      "skillDraftPreview",
+      "articleSearch",
+      "articleLayerFilter",
+      "articleLineFilter",
+      "articlePriorityFilter",
+      "articleRiskFilter"
+    ]
+  ],
   ["web/index.html", ["sourceForm", "sourceDraftPreview", "downloadSourceDraft"]],
   [
     "web/styles.css",
@@ -39,6 +51,7 @@ const checks = [
       "voice-panel",
       "voice-fab",
       "voice-progress",
+      "article-filterbar",
       "domain-grid"
     ]
   ],
@@ -59,9 +72,16 @@ const checks = [
       "物流 AGI 領域架構",
       "logistics-agent-domain-planner",
       "automation-opportunity-scanner",
-      "robotics-workflow-bridge"
-      ,"語音讀報模式",
-      "voice-briefing-producer"
+      "robotics-workflow-bridge",
+      "語音讀報模式",
+      "voice-briefing-producer",
+      "edge-tts-offline-briefing",
+      "logistics-article-classifier",
+      "VEGO AI Logistics Knowledge Base",
+      "aiLayer",
+      "logisticsLine",
+      "vegoPriority",
+      "riskLevel"
     ]
   ],
   [
@@ -71,6 +91,8 @@ const checks = [
       "const reviewQueue",
       "ARTICLE_STORAGE_KEY",
       "SOURCE_STORAGE_KEY",
+      "fillArticleFilterOptions",
+      "articleRiskClass",
       "createSkillDraft",
       "createSourceDraft",
       "openChapter",

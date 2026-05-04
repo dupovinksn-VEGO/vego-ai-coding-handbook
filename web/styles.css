@@ -302,6 +302,12 @@ a {
   margin-bottom: 18px;
 }
 
+.article-filterbar {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.4fr) repeat(5, minmax(135px, 1fr));
+  gap: 10px;
+}
+
 input,
 select {
   min-height: 42px;
@@ -473,6 +479,23 @@ button:disabled {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.article-meta,
+.article-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.article-meta span,
+.article-tags span {
+  border-radius: 999px;
+  background: #edf3ef;
+  color: var(--accent-3);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 8px;
 }
 
 .chapter-card {
@@ -689,6 +712,7 @@ button:disabled {
   .update-board,
   .queue-grid,
   .article-grid,
+  .article-filterbar,
   .collector-layout {
     grid-template-columns: 1fr;
   }
