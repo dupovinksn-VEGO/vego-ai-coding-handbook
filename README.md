@@ -2,6 +2,10 @@
 
 VEGO 專用的 AI Coding 網頁版知識庫、Skill Vault 與 Sandbox Review 系統。
 
+正式網站：
+
+[https://vego-ai-coding-handbook.netlify.app](https://vego-ai-coding-handbook.netlify.app)
+
 ## 使用方式
 
 ```powershell
@@ -9,6 +13,21 @@ npm run dev
 ```
 
 本機預覽預設開在 `http://localhost:4173`。
+
+## 文章搜集
+
+網頁上的「文章搜集區」目前支援貼文章與上傳 `.txt/.md`，會先保存在瀏覽器 localStorage。
+
+要把文章正式納入 repo，可使用：
+
+```powershell
+npm run import:article -- --file "C:\path\to\article.md" --title "文章標題" --source "來源或URL"
+```
+
+匯入後會建立：
+
+- `content/articles/YYYY-MM-DD-<slug>.md`
+- `content/sandbox-skills/<slug>/SKILL.md`
 
 ## 內容原則
 
