@@ -5,8 +5,9 @@
   "description": "VEGO AI Coding Handbook, Skill Vault, and sandbox review website.",
   "scripts": {
     "dev": "node scripts/dev-server.mjs",
-    "build": "node scripts/build-site.mjs",
-    "check": "node scripts/check-site.mjs",
+    "generate:data": "node scripts/generate-site-data.mjs",
+    "build": "npm run generate:data && node scripts/build-site.mjs",
+    "check": "npm run generate:data && node scripts/check-site.mjs",
     "import:article": "node scripts/import-article.mjs"
   },
   "keywords": [

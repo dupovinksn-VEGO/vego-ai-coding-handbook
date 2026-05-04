@@ -13,6 +13,13 @@ const chapters = [
   ["11", "參考來源與後續追蹤", "每週追蹤官方文件、工具更新與 Skill repo。", "Weekly source tracking and update workflow."]
 ];
 
+const generatedChapters = (window.VEGO_DATA?.handbook || []).map((chapter) => [
+  chapter.index,
+  chapter.title,
+  chapter.summary,
+  chapter.englishSummary
+]);
+
 const skills = [
   ["prompt-quality-review", "VEGO", "Prompt / Coding", "檢查 Goal、Context、Constraints、Done when 是否完整。", "approved", "low", ""],
   ["pressure-test-before-done", "VEGO", "Verification", "每段 coding 後自動要求 typecheck、build、壓力測試與錯誤修復。", "approved", "low", ""],
@@ -52,6 +59,20 @@ const skills = [
   risk,
   url
 }));
+
+const generatedSkills = (window.VEGO_DATA?.skills || []).map((skill) => ({
+  name: skill.name,
+  author: skill.author,
+  category: skill.category,
+  description: skill.description,
+  status: skill.status,
+  risk: skill.risk,
+  url: ""
+}));
+
+const skillByName = new Map();
+[...skills, ...generatedSkills].forEach((skill) => skillByName.set(skill.name, skill));
+const siteSkills = [...skillByName.values()];
 
 const reviewQueue = [
   {
@@ -121,7 +142,8 @@ const riskLabel = {
 
 function renderChapters() {
   const grid = document.querySelector("#handbookGrid");
-  grid.innerHTML = chapters
+  const chapterSource = generatedChapters.length ? generatedChapters : chapters;
+  grid.innerHTML = chapterSource
     .map(
       ([index, title, zh, en]) => `
         <article class="chapter-card">
@@ -137,7 +159,7 @@ function renderChapters() {
 
 function renderCategoryOptions() {
   const select = document.querySelector("#categoryFilter");
-  const categories = [...new Set(skills.map((skill) => skill.category))].sort((a, b) =>
+  const categories = [...new Set(siteSkills.map((skill) => skill.category))].sort((a, b) =>
     a.localeCompare(b, "zh-Hant")
   );
   select.insertAdjacentHTML(
@@ -152,7 +174,7 @@ function renderSkills() {
   const status = document.querySelector("#statusFilter").value;
   const grid = document.querySelector("#skillGrid");
 
-  const visible = skills.filter((skill) => {
+  const visible = siteSkills.filter((skill) => {
     const haystack = `${skill.name} ${skill.author} ${skill.category} ${skill.description}`.toLowerCase();
     return (
       (!query || haystack.includes(query)) &&
@@ -213,6 +235,18 @@ function loadArticles() {
   } catch {
     return [];
   }
+}
+
+function loadRepoArticles() {
+  return (window.VEGO_DATA?.articles || []).map((article) => ({
+    id: article.id,
+    title: article.title,
+    source: article.source,
+    body: article.body,
+    status: article.status || "repo",
+    createdAt: "",
+    readonly: true
+  }));
 }
 
 function saveArticles(articles) {
@@ -295,7 +329,7 @@ function renderArticleAnalysis(article, analysis) {
 
 function renderArticleLibrary() {
   const grid = document.querySelector("#articleLibrary");
-  const articles = loadArticles();
+  const articles = [...loadArticles(), ...loadRepoArticles()];
   if (!articles.length) {
     grid.innerHTML = `<article class="article-card"><h4>尚未收藏文章</h4><p>貼上文章或上傳 .txt/.md 後，這裡會出現閱讀與 Skill 轉換隊列。</p></article>`;
     return;
@@ -316,7 +350,7 @@ function renderArticleLibrary() {
           <p>${escapeHtml(article.body.slice(0, 130))}${article.body.length > 130 ? "..." : ""}</p>
           <div class="article-actions">
             <button class="button" type="button" data-article-draft="${article.id}">生成草稿</button>
-            <button class="button" type="button" data-article-delete="${article.id}">移除</button>
+            ${article.readonly ? "" : `<button class="button" type="button" data-article-delete="${article.id}">移除</button>`}
           </div>
         </article>
       `;
@@ -402,7 +436,7 @@ document.querySelector("#articleLibrary").addEventListener("click", (event) => {
   const draftId = event.target.getAttribute("data-article-draft");
   const deleteId = event.target.getAttribute("data-article-delete");
   if (draftId) {
-    const article = loadArticles().find((item) => item.id === draftId);
+    const article = [...loadArticles(), ...loadRepoArticles()].find((item) => item.id === draftId);
     if (article) setDraft(article);
   }
   if (deleteId) {

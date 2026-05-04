@@ -4,6 +4,7 @@ const checks = [
   ["web/index.html", ["VEGO AI Coding 寶典", "Sandbox Review", "English summary", "審核駕駛艙"]],
   ["web/index.html", ["AI Coding 文章搜集區", "articleForm", "skillDraftPreview"]],
   ["web/styles.css", ["@media (max-width: 920px)", "grid-template-columns", "border-radius: 8px", "queue-grid", "collector-layout"]],
+  ["web/data.js", ["window.VEGO_DATA", "handbook", "skills", "articles", "sandboxSkills"]],
   ["web/app.js", ["const chapters", "const skills", "const reviewQueue", "ARTICLE_STORAGE_KEY", "createSkillDraft", "logistics-exception-management", "external-skill-converter", "superpowers-zh"]]
 ];
 
