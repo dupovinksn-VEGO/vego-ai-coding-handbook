@@ -1,5 +1,5 @@
 window.VEGO_DATA = {
-  "generatedAt": "2026-05-04T23:41:08.628Z",
+  "generatedAt": "2026-05-04T23:53:19.050Z",
   "handbook": [
     {
       "index": "00",

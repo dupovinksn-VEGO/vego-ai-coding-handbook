@@ -229,6 +229,7 @@ function populateVoiceOptions() {
   const select = document.querySelector("#speechVoice");
   if (!select || !speechSupported()) return;
   const voices = availableVoices();
+  const hasChineseVoice = voices.some((voice) => /^zh/i.test(voice.lang));
   const current = select.value;
   select.innerHTML = `<option value="">系統預設</option>`;
   voices.forEach((voice, index) => {
@@ -238,8 +239,10 @@ function populateVoiceOptions() {
     select.appendChild(option);
   });
   if (current && voices[Number(current)]) select.value = current;
-  if (voices.length) {
-    setVoiceStatus(`已偵測 ${voices.length} 個系統語音；若沒有聲音，請先按「測試聲音」。`);
+  if (voices.length && hasChineseVoice) {
+    setVoiceStatus(`已偵測 ${voices.length} 個系統語音，包含中文語音；若沒有聲音，請先按「測試聲音」。`);
+  } else if (voices.length) {
+    setVoiceStatus(`已偵測 ${voices.length} 個系統語音，但目前沒有中文語音。請安裝繁中語音包，或先選英文語音測試。`);
   } else {
     setVoiceStatus("尚未偵測到系統語音；請確認瀏覽器或 Windows 已安裝語音包。");
   }
@@ -266,7 +269,7 @@ function splitSpeechText(text) {
   let current = "";
   for (const sentence of sentences) {
     const next = `${current}${sentence}`.trim();
-    if (next.length > 180 && current) {
+    if (next.length > 420 && current) {
       chunks.push(current);
       current = sentence.trim();
     } else {
@@ -299,7 +302,7 @@ function speakChunk() {
   activeUtterance.onend = () => {
     speechChunkIndex += 1;
     setSpeechProgress(Math.round((speechChunkIndex / speechChunks.length) * 100));
-    speakChunk();
+    window.setTimeout(speakChunk, 80);
   };
   activeUtterance.onerror = (event) => {
     if (speechStoppedByUser || event.error === "interrupted" || event.error === "canceled") {
