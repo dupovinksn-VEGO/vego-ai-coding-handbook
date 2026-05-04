@@ -1,0 +1,19 @@
+sources:
+  - repo: lijigang/ljg-skills
+    category: 中文創作與認知
+    status: external_pending_review
+  - repo: alchaincyf/huashu-skills
+    category: 內容生產
+    status: external_pending_review
+  - repo: freestylefly/canghe-skills
+    category: 發布與素材
+    status: external_pending_review
+  - repo: kangarooking/kangarooking-skills
+    category: 自動化
+    status: external_pending_review
+  - repo: mattpocock/skills
+    category: 工程化 Coding
+    status: external_pending_review
+  - repo: jnMetaCode/superpowers-zh
+    category: 中文 AI 編程
+    status: external_pending_review

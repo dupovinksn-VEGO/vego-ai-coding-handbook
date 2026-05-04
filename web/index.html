@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="VEGO AI Coding Handbook: bilingual AI coding knowledge base, Skill Vault, and sandbox review system."
+    />
+    <title>VEGO AI Coding 寶典</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#overview" aria-label="VEGO AI Coding Handbook home">
+        <span class="brand-mark">V</span>
+        <span>
+          <strong>VEGO AI Coding 寶典</strong>
+          <small>Handbook · Skill Vault · Sandbox</small>
+        </span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#handbook">寶典目錄</a>
+        <a href="#skills">Skill Vault</a>
+        <a href="#articles">文章搜集</a>
+        <a href="#sandbox">Sandbox</a>
+        <a href="#updates">每週更新</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="overview" class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">VEGO Internal AI Coding Operating System</p>
+          <h1>把 AI Coding 知識、工具與每週更新變成 VEGO 可複用能力。</h1>
+          <p>
+            這個 sandbox 先展示正式寶典的工作方式：文檔按原學習指南目錄整理，外部 Skill
+            先進待審核區，通過安全掃描與 VEGO 化改寫後才進入正式工具包。
+          </p>
+          <p class="summary">
+            English summary: a Netlify-ready bilingual handbook for AI coding, reusable skills,
+            external skill curation, and weekly review-based upgrades.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#sandbox">查看 Sandbox</a>
+            <a class="button" href="#skills">瀏覽 Skill Vault</a>
+          </div>
+        </div>
+        <div class="status-panel" aria-label="Project status">
+          <div>
+            <span class="metric">Weekly</span>
+            <span>更新節奏</span>
+          </div>
+          <div>
+            <span class="metric">20</span>
+            <span>首批外部 Skill 雷達</span>
+          </div>
+          <div>
+            <span class="metric">Safe</span>
+            <span>先審核再啟用</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="handbook" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Handbook</p>
+          <h2>按原文檔目錄建立的知識庫</h2>
+          <p>繁中正文為主，每章保留英文摘要，方便對外或團隊雙語協作。</p>
+        </div>
+        <div id="handbookGrid" class="chapter-grid"></div>
+      </section>
+
+      <section id="skills" class="section muted">
+        <div class="section-heading">
+          <p class="eyebrow">Skill Vault</p>
+          <h2>VEGO 自建 Skill 與外部寶藏 Skill</h2>
+          <p>外部來源會先被收藏、掃描、分類，再轉成 VEGO 可用的 `.md Skill`。</p>
+        </div>
+        <div class="toolbar" role="search">
+          <input id="skillSearch" type="search" placeholder="搜尋 Skill、作者、用途..." />
+          <select id="categoryFilter" aria-label="Skill category filter">
+            <option value="all">全部分類</option>
+          </select>
+          <select id="statusFilter" aria-label="Skill status filter">
+            <option value="all">全部狀態</option>
+            <option value="approved">正式可用</option>
+            <option value="sandbox">Sandbox</option>
+            <option value="external">外部待轉換</option>
+          </select>
+        </div>
+        <div id="skillGrid" class="skill-grid"></div>
+      </section>
+
+      <section id="articles" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Article Collector</p>
+          <h2>AI Coding 文章搜集區</h2>
+          <p>
+            你可以貼文章或上傳 `.txt/.md`，先放進本地閱讀庫；系統會抽取 GitHub 連結、Skill
+            候選與審核摘要，生成可下載的 Sandbox Skill 草稿。
+          </p>
+        </div>
+        <div class="collector-layout">
+          <form id="articleForm" class="collector-form">
+            <label>
+              文章標題
+              <input id="articleTitle" type="text" placeholder="例如：最值得推荐的20个宝藏Skills" />
+            </label>
+            <label>
+              來源 / URL
+              <input id="articleSource" type="text" placeholder="文章來源、作者、URL 或發布日期" />
+            </label>
+            <label>
+              上傳文章
+              <input id="articleFile" type="file" accept=".txt,.md,.markdown,text/plain,text/markdown" />
+            </label>
+            <label>
+              文章內容
+              <textarea id="articleBody" rows="12" placeholder="把文章全文貼到這裡，或先上傳 .txt/.md 檔案。"></textarea>
+            </label>
+            <div class="hero-actions">
+              <button class="button primary" type="submit">收藏並分析</button>
+              <button class="button" id="clearArticleForm" type="button">清空輸入</button>
+            </div>
+          </form>
+          <aside class="collector-result">
+            <h3>本次抽取結果</h3>
+            <div id="articleAnalysis" class="analysis-box">
+              <p>尚未分析。貼上文章後，系統會在這裡顯示 Skill 線索與 GitHub 來源。</p>
+            </div>
+            <h3>Sandbox Skill 草稿</h3>
+            <pre id="skillDraftPreview" class="draft-preview">尚未生成草稿。</pre>
+            <button class="button" id="downloadDraft" type="button" disabled>下載草稿 .md</button>
+          </aside>
+        </div>
+        <div class="section-subheading">
+          <h3>文章閱讀庫</h3>
+          <p>目前先保存在此瀏覽器的 localStorage；正式版可接 GitHub repo 或資料庫。</p>
+        </div>
+        <div id="articleLibrary" class="article-grid"></div>
+      </section>
+
+      <section id="sandbox" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Sandbox Review</p>
+          <h2>先讓你看效果，再決定是否進正式寶典</h2>
+          <p>每個新增來源會產生「收藏卡、風險卡、轉換建議、VEGO 適用度」。</p>
+        </div>
+        <div class="review-flow">
+          <article>
+            <span>1</span>
+            <h3>提交 URL / 文章</h3>
+            <p>你貼文章、GitHub repo 或安裝命令，系統抽取 Skill 名稱、用途與來源。</p>
+          </article>
+          <article>
+            <span>2</span>
+            <h3>自動下載典藏</h3>
+            <p>只讀抓取 README、SKILL.md、package 資訊、release 與 license。</p>
+          </article>
+          <article>
+            <span>3</span>
+            <h3>安全與適用度審核</h3>
+            <p>標記 shell、網路請求、token、刪檔、外部 API、授權限制等風險。</p>
+          </article>
+          <article>
+            <span>4</span>
+            <h3>VEGO 化轉換</h3>
+            <p>轉成繁中主體、英文摘要、適用場景、測試案例與使用限制。</p>
+          </article>
+        </div>
+        <div class="sandbox-note">
+          <strong>目前策略：</strong>
+          外部 Skill 先放入 Sandbox，不直接自動啟用。你確認後才升級到正式 Skill Vault。
+        </div>
+        <div class="section-subheading">
+          <h3>審核駕駛艙</h3>
+          <p>每個外部來源都會留下狀態，方便你決定要收藏、轉換、批准或暫停。</p>
+        </div>
+        <div id="reviewQueue" class="queue-grid"></div>
+      </section>
+
+      <section id="updates" class="section muted">
+        <div class="section-heading">
+          <p class="eyebrow">Weekly Update</p>
+          <h2>每週自動升級，但正式更新前保留人工確認</h2>
+          <p>AI 工具變化很快，每週檢查官方 changelog、已收藏 repo、你新增的文章來源。</p>
+        </div>
+        <div class="update-board">
+          <div>
+            <h3>每週檢查來源</h3>
+            <ul>
+              <li>OpenAI / Codex docs 與 changelog</li>
+              <li>GitHub Skill repositories release / commits</li>
+              <li>Vercel、Netlify、Cloudflare AI tooling</li>
+              <li>你不定時補充的文章與網頁</li>
+            </ul>
+          </div>
+          <div>
+            <h3>輸出內容</h3>
+            <ul>
+              <li>weekly-update-report.md</li>
+              <li>pending skill cards</li>
+              <li>安全風險分級</li>
+              <li>Netlify preview / sandbox page</li>
+            </ul>
+          </div>
+          <div>
+            <h3>批准後更新</h3>
+            <ul>
+              <li>正式寶典章節</li>
+              <li>正式 VEGO Skill</li>
+              <li>外部 Skill 典藏紀錄</li>
+              <li>CHANGELOG</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>VEGO AI Coding Handbook Sandbox</span>
+      <span>Netlify-ready · 繁中主體 · English summary</span>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

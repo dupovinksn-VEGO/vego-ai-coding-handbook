@@ -1,0 +1,34 @@
+approved:
+  - pressure-test-before-done
+  - prompt-quality-review
+  - customer-friendly-ui-review
+  - logistics-exception-management
+  - architecture-review
+  - base-code-generator
+  - ai-tool-comparison-eval
+  - pr-review-logistics
+
+sandbox:
+  - external-skill-converter
+
+external_pending_review:
+  - ljg-skills
+  - huashu-skills
+  - canghe-skills
+  - kangarooking-skills
+  - Auto-WeChat-Writing
+  - khazix-writer
+  - hv-analysis
+  - soul.skill
+  - any2html
+  - info-card-designer
+  - guizang-ppt-skill
+  - impeccable
+  - tacit-mining
+  - obsidian-skills
+  - csv-data-summarizer
+  - translate-book
+  - slavingia-skills
+  - opc-skills
+  - mattpocock-skills
+  - superpowers-zh
