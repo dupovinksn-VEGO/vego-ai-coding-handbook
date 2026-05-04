@@ -202,6 +202,7 @@ a {
 .update-board > div,
 .queue-card,
 .article-card,
+.chapter-reader,
 .sandbox-note {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -463,6 +464,74 @@ button:disabled {
   gap: 8px;
 }
 
+.chapter-card {
+  display: grid;
+  gap: 10px;
+}
+
+.chapter-reader {
+  margin-top: 22px;
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.reader-toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 16px;
+}
+
+.reader-toolbar h3 {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 34px);
+}
+
+.reader-body {
+  max-width: 880px;
+}
+
+.reader-body h3,
+.reader-body h4,
+.reader-body h5 {
+  margin: 24px 0 8px;
+  line-height: 1.25;
+}
+
+.reader-body h3 {
+  font-size: 28px;
+}
+
+.reader-body h4 {
+  color: var(--accent);
+  font-size: 21px;
+}
+
+.reader-body h5 {
+  font-size: 17px;
+}
+
+.reader-body p,
+.reader-body li {
+  color: #2c3734;
+}
+
+.reader-body pre {
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8faf8;
+  padding: 14px;
+}
+
+.reader-body code {
+  border-radius: 5px;
+  background: #edf3ef;
+  padding: 1px 5px;
+}
+
 .update-board ul {
   margin: 0;
   padding-left: 20px;
@@ -520,5 +589,9 @@ button:disabled {
 
   .brand {
     min-width: 0;
+  }
+
+  .reader-toolbar {
+    flex-direction: column;
   }
 }

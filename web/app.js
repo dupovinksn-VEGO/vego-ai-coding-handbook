@@ -1,35 +1,7 @@
-const chapters = [
-  ["00", "目錄與使用方式", "如何查找知識、套用 Skill、提交外部來源與審核更新。", "How to use the handbook, Skill Vault, and review flow."],
-  ["01", "一頁總覽：學習定位", "從物流經營者角度成為 AI 系統產品主。", "Position AI coding as operator-led system building."],
-  ["02", "重要名詞速查表", "AI、Agent、軟體工程與物流科技名詞速查。", "Glossary for AI, agents, engineering, and logistics tech."],
-  ["03", "Prompt 學習指南", "使用 Goal + Context + Constraints + Done when 降低錯誤率。", "Reusable prompt patterns for reliable coding work."],
-  ["04", "Skill 設計", "把物流經驗變成 AI 可重複執行的 SOP。", "Convert operating know-how into reusable skills."],
-  ["05", "系統架構與 Base Code", "先設計資料流、狀態流與驗收，再生成程式。", "Design data flow and acceptance criteria before code."],
-  ["06", "AI Coding Agent 工具雷達", "建立工具比較機制，不迷信單一工具。", "Track and evaluate coding agents with repeatable criteria."],
-  ["07", "物流 AI 專案優先順序", "先做小而賺錢、可驗收、能累積資料的系統。", "Prioritize useful, testable, data-building logistics systems."],
-  ["08", "90 天學習與實作路線圖", "每週固定節奏，持續產出小成果。", "A practical 90-day learning and implementation roadmap."],
-  ["09", "AI Coding 安全與驗收清單", "sandbox、branch、測試、PR review 與最小權限。", "Safety and acceptance checklist for AI-generated code."],
-  ["10", "可複製模板", "AGENTS、PR Review、Architecture、Eval、操作卡。", "Copy-ready templates for projects and reviews."],
-  ["11", "參考來源與後續追蹤", "每週追蹤官方文件、工具更新與 Skill repo。", "Weekly source tracking and update workflow."]
-];
+const ARTICLE_STORAGE_KEY = "vegoAiCodingArticles";
+let currentDraft = "";
 
-const generatedChapters = (window.VEGO_DATA?.handbook || []).map((chapter) => [
-  chapter.index,
-  chapter.title,
-  chapter.summary,
-  chapter.englishSummary
-]);
-
-const skills = [
-  ["prompt-quality-review", "VEGO", "Prompt / Coding", "檢查 Goal、Context、Constraints、Done when 是否完整。", "approved", "low", ""],
-  ["pressure-test-before-done", "VEGO", "Verification", "每段 coding 後自動要求 typecheck、build、壓力測試與錯誤修復。", "approved", "low", ""],
-  ["customer-friendly-ui-review", "VEGO", "Frontend", "檢查網頁是否客戶友好、手機端可用、錯誤狀態不 crash。", "approved", "low", ""],
-  ["logistics-exception-management", "VEGO", "Logistics Ops", "處理延誤、拒收、地址錯誤、貨損與客服草稿。", "approved", "low", ""],
-  ["architecture-review", "VEGO", "Architecture", "新項目開工前審查資料流、狀態流、API、權限、測試與風險。", "approved", "low", ""],
-  ["base-code-generator", "VEGO", "Project Starter", "根據業務流程生成 base code 任務拆分與檔案結構。", "approved", "low", ""],
-  ["ai-tool-comparison-eval", "VEGO", "Tool Radar", "比較 AI Coding Agent、外部 Skill、工具或模型是否值得納入寶典。", "approved", "low", ""],
-  ["pr-review-logistics", "VEGO", "Code Review", "以物流流程、客戶體驗、資料安全與驗收標準審查 PR。", "approved", "low", ""],
-  ["external-skill-converter", "VEGO", "Skill Ops", "把外部 Skill 轉成繁中主體、英文摘要、測試案例與安全限制。", "sandbox", "medium", ""],
+const externalSkills = [
   ["ljg-skills", "李繼剛", "中文創作與認知", "寫作、思考、閱讀、認知卡片與概念拆解工具箱。", "external", "medium", "https://github.com/lijigang/ljg-skills"],
   ["huashu-skills", "花叔", "內容生產", "從選題、PPT、審校、社媒轉寫到素材庫的內容工廠。", "external", "medium", "https://github.com/alchaincyf/huashu-skills"],
   ["canghe-skills", "蒼何", "發布與素材", "下載素材、生成配圖、公众号文章提取、Markdown 格式化。", "external", "medium", "https://github.com/freestylefly/canghe-skills"],
@@ -71,8 +43,20 @@ const generatedSkills = (window.VEGO_DATA?.skills || []).map((skill) => ({
 }));
 
 const skillByName = new Map();
-[...skills, ...generatedSkills].forEach((skill) => skillByName.set(skill.name, skill));
+[...generatedSkills, ...externalSkills].forEach((skill) => skillByName.set(skill.name, skill));
 const siteSkills = [...skillByName.values()];
+
+const statusLabel = {
+  approved: "正式可用",
+  sandbox: "Sandbox",
+  external: "外部待轉換"
+};
+
+const riskLabel = {
+  low: "低風險",
+  medium: "中風險",
+  high: "高風險"
+};
 
 const reviewQueue = [
   {
@@ -106,55 +90,43 @@ const reviewQueue = [
     risk: "medium",
     action: "下一步：建立 schedule workflow，但只生成 preview，不自動合併。",
     count: "weekly"
-  },
-  {
-    title: "Netlify Preview 發布",
-    source: "netlify.toml",
-    stage: "已準備",
-    risk: "low",
-    action: "下一步：你建立 GitHub repo 後連接 Netlify。",
-    count: "deploy"
-  },
-  {
-    title: "正式寶典升級規則",
-    source: "Sandbox Review",
-    stage: "已建立",
-    risk: "low",
-    action: "下一步：每次批准時更新 approved-skills.yaml 與 CHANGELOG。",
-    count: "policy"
   }
 ];
 
-const ARTICLE_STORAGE_KEY = "vegoAiCodingArticles";
-let currentDraft = "";
-
-const statusLabel = {
-  approved: "正式可用",
-  sandbox: "Sandbox",
-  external: "外部待轉換"
-};
-
-const riskLabel = {
-  low: "低風險",
-  medium: "中風險",
-  high: "高風險"
-};
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
 function renderChapters() {
+  const chapters = window.VEGO_DATA?.handbook || [];
   const grid = document.querySelector("#handbookGrid");
-  const chapterSource = generatedChapters.length ? generatedChapters : chapters;
-  grid.innerHTML = chapterSource
+  grid.innerHTML = chapters
     .map(
-      ([index, title, zh, en]) => `
+      (chapter) => `
         <article class="chapter-card">
-          <span class="chapter-index">${index}</span>
-          <h3>${title}</h3>
-          <p>${zh}</p>
-          <p class="summary">${en}</p>
+          <span class="chapter-index">${chapter.index}</span>
+          <h3>${chapter.title}</h3>
+          <p>${chapter.summary}</p>
+          <p class="summary">${chapter.englishSummary || ""}</p>
+          <button class="button" type="button" data-chapter-index="${chapter.index}">閱讀章節</button>
         </article>
       `
     )
     .join("");
+}
+
+function openChapter(index) {
+  const chapter = (window.VEGO_DATA?.handbook || []).find((item) => item.index === index);
+  if (!chapter) return;
+  document.querySelector("#chapterReaderTitle").textContent = `${chapter.index} ${chapter.title}`;
+  document.querySelector("#chapterReaderBody").innerHTML = chapter.html;
+  document.querySelector("#chapterReader").hidden = false;
+  document.querySelector("#chapterReader").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function renderCategoryOptions() {
@@ -164,7 +136,7 @@ function renderCategoryOptions() {
   );
   select.insertAdjacentHTML(
     "beforeend",
-    categories.map((category) => `<option value="${category}">${category}</option>`).join("")
+    categories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join("")
   );
 }
 
@@ -173,7 +145,6 @@ function renderSkills() {
   const category = document.querySelector("#categoryFilter").value;
   const status = document.querySelector("#statusFilter").value;
   const grid = document.querySelector("#skillGrid");
-
   const visible = siteSkills.filter((skill) => {
     const haystack = `${skill.name} ${skill.author} ${skill.category} ${skill.description}`.toLowerCase();
     return (
@@ -188,11 +159,11 @@ function renderSkills() {
       .map(
         (skill) => `
           <article class="skill-card">
-            <span class="tag">${skill.category}</span>
+            <span class="tag">${escapeHtml(skill.category)}</span>
             <span class="status ${skill.status}">${statusLabel[skill.status]}</span>
             <span class="risk ${skill.risk}">${riskLabel[skill.risk]}</span>
-            <h3>${skill.name}</h3>
-            <p><strong>${skill.author}</strong> · ${skill.description}</p>
+            <h3>${escapeHtml(skill.name)}</h3>
+            <p><strong>${escapeHtml(skill.author)}</strong> · ${escapeHtml(skill.description)}</p>
             ${skill.url ? `<a href="${skill.url}" target="_blank" rel="noreferrer">查看來源</a>` : ""}
           </article>
         `
@@ -220,21 +191,16 @@ function renderReviewQueue() {
     .join("");
 }
 
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
 function loadArticles() {
   try {
     return JSON.parse(localStorage.getItem(ARTICLE_STORAGE_KEY) || "[]");
   } catch {
     return [];
   }
+}
+
+function saveArticles(articles) {
+  localStorage.setItem(ARTICLE_STORAGE_KEY, JSON.stringify(articles));
 }
 
 function loadRepoArticles() {
@@ -244,13 +210,8 @@ function loadRepoArticles() {
     source: article.source,
     body: article.body,
     status: article.status || "repo",
-    createdAt: "",
     readonly: true
   }));
-}
-
-function saveArticles(articles) {
-  localStorage.setItem(ARTICLE_STORAGE_KEY, JSON.stringify(articles));
 }
 
 function slugify(value) {
@@ -275,20 +236,17 @@ function extractInstallCommands(text) {
 
 function extractSkillCandidates(text) {
   const candidates = new Set();
-  const codeMatches = text.match(/[a-zA-Z0-9_.-]+(?:-skill|-skills|\.skill)/g) || [];
-  codeMatches.forEach((item) => candidates.add(item));
-
-  const npxMatches = text.match(/--skill\s+([A-Za-z0-9_.-]+)/g) || [];
-  npxMatches.forEach((item) => candidates.add(item.replace("--skill", "").trim()));
-
-  const namedLines = text
+  (text.match(/[a-zA-Z0-9_.-]+(?:-skill|-skills|\.skill)/g) || []).forEach((item) => candidates.add(item));
+  (text.match(/--skill\s+([A-Za-z0-9_.-]+)/g) || []).forEach((item) =>
+    candidates.add(item.replace("--skill", "").trim())
+  );
+  text
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter((line) => /^\d{1,2}[.、]\s?/.test(line))
     .map((line) => line.replace(/^\d{1,2}[.、]\s?/, "").split(/[—\-：:]/)[0].trim())
-    .filter((line) => line.length >= 3 && line.length <= 80);
-  namedLines.forEach((item) => candidates.add(item));
-
+    .filter((line) => line.length >= 3 && line.length <= 80)
+    .forEach((item) => candidates.add(item));
   return [...candidates].slice(0, 24);
 }
 
@@ -296,7 +254,7 @@ function analyzeArticle(article) {
   const githubUrls = extractGithubUrls(article.body);
   const installCommands = extractInstallCommands(article.body);
   const skillCandidates = extractSkillCandidates(article.body);
-  const risk = installCommands.length > 0 ? "medium" : githubUrls.length > 0 ? "medium" : "low";
+  const risk = installCommands.length > 0 || githubUrls.length > 0 ? "medium" : "low";
   return { githubUrls, installCommands, skillCandidates, risk };
 }
 
@@ -312,7 +270,7 @@ function createSkillDraft(article, analysis) {
     ? analysis.installCommands.map((item) => `- \`${item}\``).join("\n")
     : "- 未看到安裝命令。";
 
-  return `---\nname: ${skillName}\ndescription: 從文章「${article.title}」抽取的 AI Coding Skill 線索，先放入 VEGO Sandbox Review。\nstatus: sandbox\nsource: ${article.source || "user-submitted article"}\nrisk: ${analysis.risk}\n---\n\n# ${article.title}\n\n## 來源\n\n${article.source || "使用者手動提交"}\n\n## Skill 候選\n\n${candidates}\n\n## GitHub 來源\n\n${repos}\n\n## 安裝命令線索\n\n${commands}\n\n## VEGO 轉換建議\n\n1. 先只讀檢查 README、SKILL.md、license、package metadata。\n2. 不自動執行文章或 repo 裡的任何 shell command。\n3. 把適合 VEGO 的流程改寫成繁中主體、英文摘要、輸入、輸出、測試案例與安全限制。\n4. 通過人工批准後才移入正式 Skill Vault。\n\n## 安全審核清單\n\n- [ ] 是否需要 token、API key、登入狀態？\n- [ ] 是否會讀取或上傳本地文件？\n- [ ] 是否會刪除、覆蓋或批量修改資料？\n- [ ] 是否包含外部腳本或 npm package？\n- [ ] license 是否允許典藏與改寫？\n\n## English Summary\n\nUser-submitted article converted into a sandbox review draft for possible VEGO skill creation.\n`;
+  return `---\nname: ${skillName}\ndescription: 從文章「${article.title}」抽取的 AI Coding Skill 線索，先放入 VEGO Sandbox Review。\nstatus: sandbox\nsource: ${article.source || "user-submitted article"}\nrisk: ${analysis.risk}\n---\n\n# ${article.title}\n\n## Skill 候選\n\n${candidates}\n\n## GitHub 來源\n\n${repos}\n\n## 安裝命令線索\n\n${commands}\n\n## VEGO 轉換建議\n\n1. 只讀檢查 README、SKILL.md、license、package metadata。\n2. 不自動執行文章或 repo 裡的任何 shell command。\n3. 改寫成繁中主體、英文摘要、輸入、輸出、測試案例與安全限制。\n4. 通過人工批准後才移入正式 Skill Vault。\n\n## English Summary\n\nUser-submitted article converted into a sandbox review draft for possible VEGO skill creation.\n`;
 }
 
 function renderArticleAnalysis(article, analysis) {
@@ -327,6 +285,14 @@ function renderArticleAnalysis(article, analysis) {
   `;
 }
 
+function setDraft(article) {
+  const analysis = analyzeArticle(article);
+  currentDraft = createSkillDraft(article, analysis);
+  document.querySelector("#skillDraftPreview").textContent = currentDraft;
+  document.querySelector("#downloadDraft").disabled = false;
+  renderArticleAnalysis(article, analysis);
+}
+
 function renderArticleLibrary() {
   const grid = document.querySelector("#articleLibrary");
   const articles = [...loadArticles(), ...loadRepoArticles()];
@@ -334,7 +300,6 @@ function renderArticleLibrary() {
     grid.innerHTML = `<article class="article-card"><h4>尚未收藏文章</h4><p>貼上文章或上傳 .txt/.md 後，這裡會出現閱讀與 Skill 轉換隊列。</p></article>`;
     return;
   }
-
   grid.innerHTML = articles
     .map((article) => {
       const analysis = analyzeArticle(article);
@@ -356,14 +321,6 @@ function renderArticleLibrary() {
       `;
     })
     .join("");
-}
-
-function setDraft(article) {
-  const analysis = analyzeArticle(article);
-  currentDraft = createSkillDraft(article, analysis);
-  document.querySelector("#skillDraftPreview").textContent = currentDraft;
-  document.querySelector("#downloadDraft").disabled = false;
-  renderArticleAnalysis(article, analysis);
 }
 
 function downloadDraft() {
@@ -403,7 +360,6 @@ function handleArticleSubmit(event) {
     document.querySelector("#articleAnalysis").innerHTML = `<p>請先貼上文章內容或上傳 .txt/.md 檔案。</p>`;
     return;
   }
-
   const article = {
     id: `article-${Date.now()}`,
     title: title || body.split(/\r?\n/).find(Boolean)?.slice(0, 60) || "未命名文章",
@@ -412,9 +368,7 @@ function handleArticleSubmit(event) {
     status: "sandbox",
     createdAt: new Date().toISOString()
   };
-
-  const articles = [article, ...loadArticles()].slice(0, 50);
-  saveArticles(articles);
+  saveArticles([article, ...loadArticles()].slice(0, 50));
   setDraft(article);
   renderArticleLibrary();
 }
@@ -425,6 +379,13 @@ renderSkills();
 renderReviewQueue();
 renderArticleLibrary();
 
+document.querySelector("#handbookGrid").addEventListener("click", (event) => {
+  const index = event.target.getAttribute("data-chapter-index");
+  if (index) openChapter(index);
+});
+document.querySelector("#closeChapterReader").addEventListener("click", () => {
+  document.querySelector("#chapterReader").hidden = true;
+});
 document.querySelector("#skillSearch").addEventListener("input", renderSkills);
 document.querySelector("#categoryFilter").addEventListener("change", renderSkills);
 document.querySelector("#statusFilter").addEventListener("change", renderSkills);

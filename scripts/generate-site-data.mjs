@@ -64,6 +64,102 @@ function englishSummary(markdown) {
   return match ? match[1].replace(/\s+/g, " ").trim() : "";
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function inlineMarkdown(value) {
+  return escapeHtml(value)
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+}
+
+function markdownToHtml(markdown) {
+  const lines = stripFrontmatter(markdown).split(/\r?\n/);
+  const html = [];
+  let listOpen = false;
+  let codeOpen = false;
+  let codeLines = [];
+
+  const closeList = () => {
+    if (listOpen) {
+      html.push("</ul>");
+      listOpen = false;
+    }
+  };
+
+  for (const line of lines) {
+    if (line.startsWith("```")) {
+      if (codeOpen) {
+        html.push(`<pre><code>${escapeHtml(codeLines.join("\n"))}</code></pre>`);
+        codeLines = [];
+        codeOpen = false;
+      } else {
+        closeList();
+        codeOpen = true;
+      }
+      continue;
+    }
+
+    if (codeOpen) {
+      codeLines.push(line);
+      continue;
+    }
+
+    if (!line.trim()) {
+      closeList();
+      continue;
+    }
+
+    if (line.startsWith("# ")) {
+      closeList();
+      html.push(`<h3>${inlineMarkdown(line.slice(2))}</h3>`);
+      continue;
+    }
+
+    if (line.startsWith("## ")) {
+      closeList();
+      html.push(`<h4>${inlineMarkdown(line.slice(3))}</h4>`);
+      continue;
+    }
+
+    if (line.startsWith("### ")) {
+      closeList();
+      html.push(`<h5>${inlineMarkdown(line.slice(4))}</h5>`);
+      continue;
+    }
+
+    if (/^[-*]\s+/.test(line)) {
+      if (!listOpen) {
+        html.push("<ul>");
+        listOpen = true;
+      }
+      html.push(`<li>${inlineMarkdown(line.replace(/^[-*]\s+/, ""))}</li>`);
+      continue;
+    }
+
+    if (/^\d+\.\s+/.test(line)) {
+      if (!listOpen) {
+        html.push("<ul>");
+        listOpen = true;
+      }
+      html.push(`<li>${inlineMarkdown(line.replace(/^\d+\.\s+/, ""))}</li>`);
+      continue;
+    }
+
+    closeList();
+    html.push(`<p>${inlineMarkdown(line)}</p>`);
+  }
+
+  closeList();
+  return html.join("\n");
+}
+
 function statusFromSkillPath(path) {
   if (path.includes(`${join("content", "sandbox-skills")}`)) return "sandbox";
   return "approved";
@@ -97,6 +193,7 @@ async function handbookData() {
         title,
         summary: firstParagraph(markdown).slice(0, 120),
         englishSummary: englishSummary(markdown),
+        html: markdownToHtml(markdown),
         path: relative(process.cwd(), file).replace(/\\/g, "/")
       };
     })

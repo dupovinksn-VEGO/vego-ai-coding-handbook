@@ -1,11 +1,11 @@
 import { readFile } from "node:fs/promises";
 
 const checks = [
-  ["web/index.html", ["VEGO AI Coding 寶典", "Sandbox Review", "English summary", "審核駕駛艙"]],
+  ["web/index.html", ["VEGO AI Coding 寶典", "Sandbox Review", "English summary", "審核駕駛艙", "chapterReader"]],
   ["web/index.html", ["AI Coding 文章搜集區", "articleForm", "skillDraftPreview"]],
-  ["web/styles.css", ["@media (max-width: 920px)", "grid-template-columns", "border-radius: 8px", "queue-grid", "collector-layout"]],
-  ["web/data.js", ["window.VEGO_DATA", "handbook", "skills", "articles", "sandboxSkills"]],
-  ["web/app.js", ["const chapters", "const skills", "const reviewQueue", "ARTICLE_STORAGE_KEY", "createSkillDraft", "logistics-exception-management", "external-skill-converter", "superpowers-zh"]]
+  ["web/styles.css", ["@media (max-width: 920px)", "grid-template-columns", "border-radius: 8px", "queue-grid", "collector-layout", "chapter-reader"]],
+  ["web/data.js", ["window.VEGO_DATA", "handbook", "skills", "articles", "sandboxSkills", "\"html\"", "logistics-exception-management", "external-skill-converter"]],
+  ["web/app.js", ["externalSkills", "const reviewQueue", "ARTICLE_STORAGE_KEY", "createSkillDraft", "openChapter", "superpowers-zh"]]
 ];
 
 let failed = false;
