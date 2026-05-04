@@ -4,6 +4,8 @@ let currentDraft = "";
 let currentSourceDraft = "";
 let currentChapterIndex = "";
 let activeUtterance = null;
+let speechChunks = [];
+let speechChunkIndex = 0;
 
 const externalSkills = [
   ["ljg-skills", "李繼剛", "中文創作與認知", "寫作、思考、閱讀、認知卡片與概念拆解工具箱。", "external", "medium", "https://github.com/lijigang/ljg-skills"],
@@ -173,14 +175,82 @@ function chapterSpeechText() {
   return `${title}\n\n${body}`.replace(/\s+/g, " ").trim();
 }
 
+function availableVoices() {
+  return window.speechSynthesis?.getVoices?.() || [];
+}
+
+function populateVoiceOptions() {
+  const select = document.querySelector("#speechVoice");
+  if (!select || !speechSupported()) return;
+  const voices = availableVoices();
+  const current = select.value;
+  select.innerHTML = `<option value="">系統預設</option>`;
+  voices.forEach((voice, index) => {
+    const option = document.createElement("option");
+    option.value = String(index);
+    option.textContent = `${voice.name} · ${voice.lang}`;
+    select.appendChild(option);
+  });
+  if (current && voices[Number(current)]) select.value = current;
+  if (voices.length) {
+    setVoiceStatus(`已偵測 ${voices.length} 個系統語音；若沒有聲音，請先按「測試聲音」。`);
+  } else {
+    setVoiceStatus("尚未偵測到系統語音；請確認瀏覽器或 Windows 已安裝語音包。");
+  }
+}
+
 function preferredVoice() {
-  const voices = window.speechSynthesis?.getVoices?.() || [];
+  const selected = document.querySelector("#speechVoice")?.value || "";
+  const voices = availableVoices();
+  if (selected && voices[Number(selected)]) return voices[Number(selected)];
   return (
     voices.find((voice) => /zh-TW|zh-HK|zh/i.test(voice.lang)) ||
     voices.find((voice) => /en/i.test(voice.lang)) ||
     voices[0] ||
     null
   );
+}
+
+function splitSpeechText(text) {
+  const sentences = text.match(/[^。！？!?；;]+[。！？!?；;]?/g) || [text];
+  const chunks = [];
+  let current = "";
+  for (const sentence of sentences) {
+    const next = `${current}${sentence}`.trim();
+    if (next.length > 900 && current) {
+      chunks.push(current);
+      current = sentence.trim();
+    } else {
+      current = next;
+    }
+  }
+  if (current) chunks.push(current);
+  return chunks.slice(0, 80);
+}
+
+function speakChunk() {
+  if (!speechChunks.length || speechChunkIndex >= speechChunks.length) {
+    setVoiceStatus("本章朗讀完成。");
+    activeUtterance = null;
+    return;
+  }
+  const voice = preferredVoice();
+  activeUtterance = new SpeechSynthesisUtterance(speechChunks[speechChunkIndex]);
+  activeUtterance.lang = voice?.lang || "zh-TW";
+  activeUtterance.voice = voice || null;
+  activeUtterance.rate = Number(document.querySelector("#speechRate")?.value || 1);
+  activeUtterance.pitch = 1;
+  activeUtterance.volume = 1;
+  activeUtterance.onstart = () =>
+    setVoiceStatus(`正在朗讀第 ${speechChunkIndex + 1} / ${speechChunks.length} 段。`);
+  activeUtterance.onend = () => {
+    speechChunkIndex += 1;
+    speakChunk();
+  };
+  activeUtterance.onerror = (event) => {
+    setVoiceStatus(`朗讀中斷：${event.error || "未知原因"}。請按「測試聲音」確認瀏覽器語音。`);
+  };
+  window.speechSynthesis.speak(activeUtterance);
 }
 
 function readCurrentChapter() {
@@ -199,16 +269,20 @@ function readCurrentChapter() {
     return;
   }
   window.speechSynthesis.cancel();
-  activeUtterance = new SpeechSynthesisUtterance(text.slice(0, 18000));
-  activeUtterance.lang = "zh-TW";
-  activeUtterance.rate = Number(document.querySelector("#speechRate")?.value || 1);
-  activeUtterance.pitch = 1;
-  const voice = preferredVoice();
-  if (voice) activeUtterance.voice = voice;
-  activeUtterance.onstart = () => setVoiceStatus("正在朗讀本章。");
-  activeUtterance.onend = () => setVoiceStatus("本章朗讀完成。");
-  activeUtterance.onerror = () => setVoiceStatus("朗讀中斷，請再按一次朗讀。");
-  window.speechSynthesis.speak(activeUtterance);
+  speechChunks = splitSpeechText(text);
+  speechChunkIndex = 0;
+  speakChunk();
+}
+
+function testVoice() {
+  if (!speechSupported()) {
+    setVoiceStatus("這個瀏覽器暫時不支援語音朗讀。");
+    return;
+  }
+  window.speechSynthesis.cancel();
+  speechChunks = ["VEGO 寶典語音測試。如果你聽到這句話，表示語音功能可以使用。"];
+  speechChunkIndex = 0;
+  speakChunk();
 }
 
 function pauseSpeech() {
@@ -223,6 +297,8 @@ function stopSpeech(showStatus = true) {
   if (!speechSupported()) return;
   window.speechSynthesis.cancel();
   activeUtterance = null;
+  speechChunks = [];
+  speechChunkIndex = 0;
   if (showStatus) setVoiceStatus("已停止朗讀。");
 }
 
@@ -598,6 +674,7 @@ document.querySelector("#closeChapterReader").addEventListener("click", () => {
 document.querySelector("#readChapter").addEventListener("click", readCurrentChapter);
 document.querySelector("#pauseSpeech").addEventListener("click", pauseSpeech);
 document.querySelector("#stopSpeech").addEventListener("click", () => stopSpeech(true));
+document.querySelector("#testVoice").addEventListener("click", testVoice);
 document.querySelector("#startVoiceBriefing").addEventListener("click", startVoiceBriefing);
 document.querySelector("#openVoiceChapter").addEventListener("click", openVoiceBriefingChapter);
 document.querySelector("#speechRate").addEventListener("change", () => {
@@ -605,6 +682,17 @@ document.querySelector("#speechRate").addEventListener("change", () => {
     readCurrentChapter();
   }
 });
+document.querySelector("#speechVoice").addEventListener("change", () => {
+  if (speechSupported() && window.speechSynthesis.speaking) {
+    readCurrentChapter();
+  }
+});
+if (speechSupported()) {
+  populateVoiceOptions();
+  window.speechSynthesis.onvoiceschanged = populateVoiceOptions;
+} else {
+  setVoiceStatus("這個瀏覽器暫時不支援語音朗讀，建議改用 Chrome 或 Edge。");
+}
 document.querySelector("#prevChapter").addEventListener("click", () => navigateChapter(-1));
 document.querySelector("#nextChapter").addEventListener("click", () => navigateChapter(1));
 document.querySelector("#skillSearch").addEventListener("input", renderSkills);

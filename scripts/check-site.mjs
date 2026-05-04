@@ -11,6 +11,8 @@ const checks = [
       "chapterReader",
       "voiceStatus",
       "readChapter",
+      "testVoice",
+      "speechVoice",
       "voice-briefing",
       "startVoiceBriefing",
       "智庫工具",
@@ -71,6 +73,8 @@ const checks = [
       "openVoiceBriefingChapter",
       "startVoiceBriefing",
       "readCurrentChapter",
+      "populateVoiceOptions",
+      "testVoice",
       "speechSynthesis",
       "superpowers-zh"
     ]

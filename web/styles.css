@@ -565,6 +565,7 @@ button:disabled {
 
 .voice-panel select {
   min-height: 36px;
+  max-width: 220px;
   min-width: 96px;
 }
 
