@@ -242,11 +242,32 @@ async function articleData() {
   );
 }
 
+async function sourceData() {
+  const files = (await listFiles(join("content", "sources"), (path) => path.endsWith(".md") && !path.endsWith("README.md"))).sort().reverse();
+  return Promise.all(
+    files.map(async (file) => {
+      const markdown = await readFile(file, "utf8");
+      const frontmatter = parseFrontmatter(markdown);
+      return {
+        id: file.replace(/\\/g, "/"),
+        title: frontmatter.title || firstHeading(markdown, "Untitled source"),
+        type: frontmatter.type || "source",
+        url: frontmatter.url || "",
+        status: frontmatter.status || "sandbox",
+        risk: frontmatter.risk || "medium",
+        body: stripFrontmatter(markdown).slice(0, 1200),
+        path: relative(process.cwd(), file).replace(/\\/g, "/")
+      };
+    })
+  );
+}
+
 const data = {
   generatedAt: new Date().toISOString(),
   handbook: await handbookData(),
   skills: await skillData(),
   articles: await articleData(),
+  sources: await sourceData(),
   sandboxSkills: (await skillData()).filter((skill) => skill.status === "sandbox")
 };
 
@@ -257,5 +278,5 @@ await writeFile(
 );
 
 console.log(
-  `Generated web/data.js: ${data.handbook.length} handbook chapters, ${data.skills.length} skills, ${data.articles.length} articles.`
+  `Generated web/data.js: ${data.handbook.length} handbook chapters, ${data.skills.length} skills, ${data.articles.length} articles, ${data.sources.length} sources.`
 );

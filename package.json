@@ -8,7 +8,8 @@
     "generate:data": "node scripts/generate-site-data.mjs",
     "build": "npm run generate:data && node scripts/build-site.mjs",
     "check": "npm run generate:data && node scripts/check-site.mjs",
-    "import:article": "node scripts/import-article.mjs"
+    "import:article": "node scripts/import-article.mjs",
+    "import:source": "node scripts/import-source.mjs"
   },
   "keywords": [
     "vego",

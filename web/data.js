@@ -1,5 +1,5 @@
 window.VEGO_DATA = {
-  "generatedAt": "2026-05-04T22:30:46.914Z",
+  "generatedAt": "2026-05-04T22:35:03.520Z",
   "handbook": [
     {
       "index": "00",
@@ -104,6 +104,14 @@ window.VEGO_DATA = {
       "englishSummary": "The article collector stores user-submitted AI coding articles and converts them into reviewable sandbox skill drafts.",
       "html": "<h3>AI Coding 文章搜集區</h3>\n<p>文章搜集區用來收藏使用者不定時補充的 AI Coding 文章、工具介紹、GitHub Skill 清單與外部方法論。</p>\n<h4>工作方式</h4>\n<ul>\n<li>使用者貼文章全文或上傳 <code>.txt/.md</code>。</li>\n<li>系統先保存在 Sandbox Article Library。</li>\n<li>自動抽取 GitHub repo、安裝命令、Skill 候選名稱。</li>\n<li>生成 Sandbox Skill 草稿。</li>\n<li>人工閱讀與批准後，才轉入正式 Skill Vault。</li>\n</ul>\n<h4>文章進入知識庫的三種結果</h4>\n<h5>只收藏</h5>\n<p>文章有參考價值，但暫時不適合轉成 Skill。保留在 <code>content/articles/</code>，未來閱讀。</p>\n<h5>轉 Sandbox Skill</h5>\n<p>文章中有可執行的方法、流程、檢查表或工具清單。先生成 <code>content/sandbox-skills/&lt;slug&gt;/SKILL.md</code>。</p>\n<h5>升級正式 Skill</h5>\n<p>經過安全審核與測試案例後，移入 <code>content/skills/&lt;skill-name&gt;/SKILL.md</code>。</p>\n<h4>文章評分表</h4>\n<ul>\n<li>和 AI Coding 是否直接相關？</li>\n<li>是否有可重複流程？</li>\n<li>是否能幫 VEGO 新項目少踩坑？</li>\n<li>是否涉及安裝、執行、上傳、登入或 token？</li>\n<li>是否有 license 或來源風險？</li>\n<li>是否能改寫成繁中 SOP？</li>\n</ul>\n<h4>文章轉 Skill 的最低標準</h4>\n<ul>\n<li>有明確使用場景。</li>\n<li>有輸入與輸出。</li>\n<li>有安全限制。</li>\n<li>有 2 個以上測試案例。</li>\n<li>有英文摘要。</li>\n<li>不依賴未審核外部腳本。</li>\n</ul>\n<h4>安全邊界</h4>\n<ul>\n<li>不自動執行文章中的命令。</li>\n<li>不自動安裝外部 repo。</li>\n<li>不自動啟用外部 Skill。</li>\n<li>不把文章內容傳給第三方服務，除非使用者明確批准。</li>\n</ul>\n<h4>English Summary</h4>\n<p>The article collector stores user-submitted AI coding articles and converts them into reviewable sandbox skill drafts.</p>",
       "path": "content/handbook/12-AI-Coding文章搜集區.md"
+    },
+    {
+      "index": "13",
+      "title": "智庫工具與外部電子書",
+      "summary": "VEGO AI Coding 寶典最重要的能力之一，是把外部知識和自己創建的系統轉化成可複用的知識、SOP 和 Skill。",
+      "englishSummary": "The intelligence hub links external books, subscribed content, and VEGO-owned systems into a reviewable pipeline for handbook knowledge and reusable skills.",
+      "html": "<h3>智庫工具與外部電子書</h3>\n<p>VEGO AI Coding 寶典最重要的能力之一，是把外部知識和自己創建的系統轉化成可複用的知識、SOP 和 Skill。</p>\n<h4>外部電子書可以怎麼接入</h4>\n<p>可以：</p>\n<ul>\n<li>保存電子書或訂閱內容的連結。</li>\n<li>保存自己的閱讀筆記。</li>\n<li>保存短摘錄，用於定位重點。</li>\n<li>把內容改寫成自己的理解、方法論、檢查表。</li>\n<li>轉成 VEGO Skill 草稿。</li>\n</ul>\n<p>不可以：</p>\n<ul>\n<li>繞過 DRM 或 paywall。</li>\n<li>整本搬運到寶典。</li>\n<li>把未授權內容公開發布。</li>\n<li>將受限內容自動分享給第三方。</li>\n</ul>\n<h4>自有系統如何注入寶典</h4>\n<p>你可以把自己建立的系統 URL 放入智庫來源隊列，讓寶典記錄：</p>\n<ul>\n<li>這個系統解決什麼問題。</li>\n<li>哪些頁面、流程、錯誤處理值得學習。</li>\n<li>哪些 UI / API / data model pattern 可以轉成 Skill。</li>\n<li>哪些經驗可以反哺新項目 base code。</li>\n</ul>\n<p>第一階段只做 read-only 吸收，不修改原系統。</p>\n<h4>智庫吸收流程</h4>\n<ul>\n<li>建立來源卡。</li>\n<li>標記來源類型：system、ebook、article、github、docs。</li>\n<li>寫明吸收目標。</li>\n<li>生成摘要與方法論。</li>\n<li>抽取 Skill 候選。</li>\n<li>進 Sandbox Review。</li>\n<li>批准後升級為正式寶典內容或正式 Skill。</li>\n</ul>\n<h4>English Summary</h4>\n<p>The intelligence hub links external books, subscribed content, and VEGO-owned systems into a reviewable pipeline for handbook knowledge and reusable skills.</p>",
+      "path": "content/handbook/13-智庫工具與外部電子書.md"
     }
   ],
   "skills": [
@@ -218,6 +226,7 @@ window.VEGO_DATA = {
       "path": "content/articles/2026-05-04-20-treasure-skills.md"
     }
   ],
+  "sources": [],
   "sandboxSkills": [
     {
       "name": "article-20-treasure-skills",

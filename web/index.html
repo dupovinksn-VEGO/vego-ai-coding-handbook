@@ -23,6 +23,7 @@
         <a href="#handbook">寶典目錄</a>
         <a href="#skills">Skill Vault</a>
         <a href="#articles">文章搜集</a>
+        <a href="#intelligence">智庫工具</a>
         <a href="#sandbox">Sandbox</a>
         <a href="#updates">每週更新</a>
       </nav>
@@ -74,8 +75,13 @@
             <div>
               <p class="eyebrow">Knowledge Base</p>
               <h3 id="chapterReaderTitle">章節內容</h3>
+              <p id="chapterReaderProgress" class="summary">電子書閱讀模式</p>
             </div>
-            <button class="button" id="closeChapterReader" type="button">關閉</button>
+            <div class="reader-actions">
+              <button class="button" id="prevChapter" type="button">上一章</button>
+              <button class="button" id="nextChapter" type="button">下一章</button>
+              <button class="button" id="closeChapterReader" type="button">關閉</button>
+            </div>
           </div>
           <div id="chapterReaderBody" class="reader-body"></div>
         </article>
@@ -149,6 +155,63 @@
           <p>瀏覽器暫存文章會留在 localStorage；正式收藏文章會進入 repo 的 `content/articles/`。</p>
         </div>
         <div id="articleLibrary" class="article-grid"></div>
+      </section>
+
+      <section id="intelligence" class="section muted">
+        <div class="section-heading">
+          <p class="eyebrow">Intelligence Hub</p>
+          <h2>智庫工具：把外部來源轉成 VEGO 能力</h2>
+          <p>
+            你可以登記外部電子書、訂閱文章、GitHub repo、Netlify/Vercel 系統、內部工具網址。
+            系統先建立來源卡與吸收計畫，再決定是否整理成寶典內容或 Sandbox Skill。
+          </p>
+        </div>
+        <div class="collector-layout">
+          <form id="sourceForm" class="collector-form">
+            <label>
+              來源名稱
+              <input id="sourceTitle" type="text" placeholder="例如：VEGO WMS、某本 AI Coding 電子書、外部 Skill repo" />
+            </label>
+            <label>
+              來源類型
+              <select id="sourceType">
+                <option value="system">我創建的系統</option>
+                <option value="ebook">外部電子書 / 訂閱內容</option>
+                <option value="article">文章 / 網頁</option>
+                <option value="github">GitHub repo</option>
+                <option value="docs">官方文件 / docs</option>
+              </select>
+            </label>
+            <label>
+              URL / Repo / 文件位置
+              <input id="sourceUrl" type="text" placeholder="https://... 或 GitHub repo URL" />
+            </label>
+            <label>
+              你希望它幫 VEGO 吸收什麼？
+              <textarea id="sourceGoal" rows="8" placeholder="例如：抽取可複用的 onboarding flow、UI review Skill、API integration pattern、debug SOP。"></textarea>
+            </label>
+            <div class="hero-actions">
+              <button class="button primary" type="submit">建立智庫來源卡</button>
+              <button class="button" id="clearSourceForm" type="button">清空輸入</button>
+            </div>
+          </form>
+          <aside class="collector-result">
+            <h3>吸收邊界</h3>
+            <div class="analysis-box">
+              <p><strong>外部電子書 / 訂閱內容：</strong>可以保存連結、個人摘要、短摘錄與方法論改寫；不做整本搬運，不繞過 DRM/paywall。</p>
+              <p><strong>你自己的系統：</strong>可以登記 URL 與目標，先用 read-only 方式抽取可學習的流程、頁面模式、錯誤處理與 Skill 線索。</p>
+              <p><strong>外部 repo：</strong>先只讀 README、license、SKILL.md、package metadata，不自動執行命令。</p>
+            </div>
+            <h3>智庫來源卡草稿</h3>
+            <pre id="sourceDraftPreview" class="draft-preview">尚未建立來源卡。</pre>
+            <button class="button" id="downloadSourceDraft" type="button" disabled>下載來源卡 .md</button>
+          </aside>
+        </div>
+        <div class="section-subheading">
+          <h3>來源隊列</h3>
+          <p>目前先存在瀏覽器 localStorage；正式版可匯入 `content/sources/`，再生成 review PR。</p>
+        </div>
+        <div id="sourceLibrary" class="article-grid"></div>
       </section>
 
       <section id="sandbox" class="section">

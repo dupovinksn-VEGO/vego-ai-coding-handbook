@@ -29,6 +29,20 @@ npm run import:article -- --file "C:\path\to\article.md" --title "文章標題" 
 - `content/articles/YYYY-MM-DD-<slug>.md`
 - `content/sandbox-skills/<slug>/SKILL.md`
 
+## 智庫來源
+
+要把外部電子書、訂閱文章、GitHub repo、官方 docs，或你自己創建的系統 URL 放入智庫來源隊列：
+
+```powershell
+npm run import:source -- --title "來源名稱" --type "system" --url "https://example.netlify.app" --goal "抽取可複用的流程與 Skill"
+```
+
+匯入後會建立：
+
+- `content/sources/YYYY-MM-DD-<slug>.md`
+
+外部電子書與訂閱內容只保存連結、摘要、短摘錄與自己的方法論改寫；不繞過 DRM、paywall 或授權限制。
+
 ## 內容原則
 
 - 繁體中文為主，每個主要頁面附英文摘要。

@@ -1,5 +1,8 @@
 const ARTICLE_STORAGE_KEY = "vegoAiCodingArticles";
+const SOURCE_STORAGE_KEY = "vegoIntelligenceSources";
 let currentDraft = "";
+let currentSourceDraft = "";
+let currentChapterIndex = "";
 
 const externalSkills = [
   ["ljg-skills", "李繼剛", "中文創作與認知", "寫作、思考、閱讀、認知卡片與概念拆解工具箱。", "external", "medium", "https://github.com/lijigang/ljg-skills"],
@@ -121,12 +124,25 @@ function renderChapters() {
 }
 
 function openChapter(index) {
-  const chapter = (window.VEGO_DATA?.handbook || []).find((item) => item.index === index);
+  const chapters = window.VEGO_DATA?.handbook || [];
+  const chapter = chapters.find((item) => item.index === index);
   if (!chapter) return;
+  currentChapterIndex = index;
+  const position = chapters.findIndex((item) => item.index === index) + 1;
   document.querySelector("#chapterReaderTitle").textContent = `${chapter.index} ${chapter.title}`;
+  document.querySelector("#chapterReaderProgress").textContent = `第 ${position} / ${chapters.length} 章 · 電子書閱讀模式`;
   document.querySelector("#chapterReaderBody").innerHTML = chapter.html;
   document.querySelector("#chapterReader").hidden = false;
   document.querySelector("#chapterReader").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function navigateChapter(direction) {
+  const chapters = window.VEGO_DATA?.handbook || [];
+  const current = chapters.findIndex((item) => item.index === currentChapterIndex);
+  if (current === -1) return;
+  const next = current + direction;
+  if (next < 0 || next >= chapters.length) return;
+  openChapter(chapters[next].index);
 }
 
 function renderCategoryOptions() {
@@ -201,6 +217,29 @@ function loadArticles() {
 
 function saveArticles(articles) {
   localStorage.setItem(ARTICLE_STORAGE_KEY, JSON.stringify(articles));
+}
+
+function loadSources() {
+  try {
+    return JSON.parse(localStorage.getItem(SOURCE_STORAGE_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function loadRepoSources() {
+  return (window.VEGO_DATA?.sources || []).map((source) => ({
+    id: source.id,
+    title: source.title,
+    type: source.type,
+    url: source.url,
+    goal: source.body,
+    readonly: true
+  }));
+}
+
+function saveSources(sources) {
+  localStorage.setItem(SOURCE_STORAGE_KEY, JSON.stringify(sources));
 }
 
 function loadRepoArticles() {
@@ -334,6 +373,93 @@ function downloadDraft() {
   URL.revokeObjectURL(url);
 }
 
+function createSourceDraft(source) {
+  const risk =
+    source.type === "ebook"
+      ? "medium"
+      : source.type === "system"
+        ? "medium"
+        : source.type === "github"
+          ? "medium"
+          : "low";
+  return `---\ntitle: ${source.title}\ntype: ${source.type}\nurl: ${source.url || "not-provided"}\nstatus: sandbox\nrisk: ${risk}\n---\n\n# ${source.title}\n\n## 來源類型\n\n${source.type}\n\n## URL / 位置\n\n${source.url || "未填"}\n\n## VEGO 吸收目標\n\n${source.goal || "待補充"}\n\n## 可吸收內容\n\n- 可複用流程\n- UI / API / debug pattern\n- prompt 或 Skill 線索\n- 安全與驗收規則\n- 可轉成 VEGO 寶典的摘要與方法論\n\n## 邊界\n\n- 外部電子書與訂閱內容只保存連結、摘要、短摘錄與自己的方法論改寫。\n- 不繞過 DRM、paywall 或授權限制。\n- 不自動執行外部 repo 或系統中的命令。\n- 對你自己的系統先做 read-only 吸收，不修改原系統。\n\n## 下一步\n\n1. 建立來源摘要。\n2. 抽取可轉 Skill 的 SOP。\n3. 生成 Sandbox Skill 草稿。\n4. 人工批准後進正式 Skill Vault。\n\n## English Summary\n\nSandbox source card for turning an external source or VEGO-owned system into reviewed handbook knowledge and reusable skills.\n`;
+}
+
+function setSourceDraft(source) {
+  currentSourceDraft = createSourceDraft(source);
+  document.querySelector("#sourceDraftPreview").textContent = currentSourceDraft;
+  document.querySelector("#downloadSourceDraft").disabled = false;
+}
+
+function renderSourceLibrary() {
+  const grid = document.querySelector("#sourceLibrary");
+  const sources = [...loadSources(), ...loadRepoSources()];
+  if (!sources.length) {
+    grid.innerHTML = `<article class="article-card"><h4>尚未建立來源</h4><p>登記電子書、訂閱文章、GitHub repo 或你自己的系統 URL 後，這裡會形成智庫吸收隊列。</p></article>`;
+    return;
+  }
+  grid.innerHTML = sources
+    .map(
+      (source) => `
+        <article class="article-card">
+          <div>
+            <span class="tag">${escapeHtml(source.type)}</span>
+            <span class="status">sandbox</span>
+          </div>
+          <h4>${escapeHtml(source.title)}</h4>
+          <p>${escapeHtml(source.url || "未填 URL")}</p>
+          <p>${escapeHtml((source.goal || "").slice(0, 140))}${(source.goal || "").length > 140 ? "..." : ""}</p>
+          <div class="article-actions">
+            <button class="button" type="button" data-source-draft="${source.id}">生成來源卡</button>
+            ${source.readonly ? "" : `<button class="button" type="button" data-source-delete="${source.id}">移除</button>`}
+          </div>
+        </article>
+      `
+    )
+    .join("");
+}
+
+function clearSourceForm() {
+  document.querySelector("#sourceTitle").value = "";
+  document.querySelector("#sourceType").value = "system";
+  document.querySelector("#sourceUrl").value = "";
+  document.querySelector("#sourceGoal").value = "";
+}
+
+function handleSourceSubmit(event) {
+  event.preventDefault();
+  const title = document.querySelector("#sourceTitle").value.trim();
+  const type = document.querySelector("#sourceType").value;
+  const url = document.querySelector("#sourceUrl").value.trim();
+  const goal = document.querySelector("#sourceGoal").value.trim();
+  if (!title && !url) {
+    document.querySelector("#sourceDraftPreview").textContent = "請至少填寫來源名稱或 URL。";
+    return;
+  }
+  const source = {
+    id: `source-${Date.now()}`,
+    title: title || url,
+    type,
+    url,
+    goal,
+    createdAt: new Date().toISOString()
+  };
+  saveSources([source, ...loadSources()].slice(0, 50));
+  setSourceDraft(source);
+  renderSourceLibrary();
+}
+
+function downloadSourceDraft() {
+  if (!currentSourceDraft) return;
+  const blob = new Blob([currentSourceDraft], { type: "text/markdown;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${slugify(document.querySelector("#sourceTitle").value || "intelligence-source")}.md`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 function clearArticleForm() {
   document.querySelector("#articleTitle").value = "";
   document.querySelector("#articleSource").value = "";
@@ -378,6 +504,7 @@ renderCategoryOptions();
 renderSkills();
 renderReviewQueue();
 renderArticleLibrary();
+renderSourceLibrary();
 
 document.querySelector("#handbookGrid").addEventListener("click", (event) => {
   const index = event.target.getAttribute("data-chapter-index");
@@ -386,6 +513,8 @@ document.querySelector("#handbookGrid").addEventListener("click", (event) => {
 document.querySelector("#closeChapterReader").addEventListener("click", () => {
   document.querySelector("#chapterReader").hidden = true;
 });
+document.querySelector("#prevChapter").addEventListener("click", () => navigateChapter(-1));
+document.querySelector("#nextChapter").addEventListener("click", () => navigateChapter(1));
 document.querySelector("#skillSearch").addEventListener("input", renderSkills);
 document.querySelector("#categoryFilter").addEventListener("change", renderSkills);
 document.querySelector("#statusFilter").addEventListener("change", renderSkills);
@@ -393,6 +522,21 @@ document.querySelector("#articleForm").addEventListener("submit", handleArticleS
 document.querySelector("#articleFile").addEventListener("change", handleArticleFile);
 document.querySelector("#clearArticleForm").addEventListener("click", clearArticleForm);
 document.querySelector("#downloadDraft").addEventListener("click", downloadDraft);
+document.querySelector("#sourceForm").addEventListener("submit", handleSourceSubmit);
+document.querySelector("#clearSourceForm").addEventListener("click", clearSourceForm);
+document.querySelector("#downloadSourceDraft").addEventListener("click", downloadSourceDraft);
+document.querySelector("#sourceLibrary").addEventListener("click", (event) => {
+  const draftId = event.target.getAttribute("data-source-draft");
+  const deleteId = event.target.getAttribute("data-source-delete");
+  if (draftId) {
+    const source = [...loadSources(), ...loadRepoSources()].find((item) => item.id === draftId);
+    if (source) setSourceDraft(source);
+  }
+  if (deleteId) {
+    saveSources(loadSources().filter((item) => item.id !== deleteId));
+    renderSourceLibrary();
+  }
+});
 document.querySelector("#articleLibrary").addEventListener("click", (event) => {
   const draftId = event.target.getAttribute("data-article-draft");
   const deleteId = event.target.getAttribute("data-article-delete");
