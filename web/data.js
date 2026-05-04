@@ -1,5 +1,5 @@
 window.VEGO_DATA = {
-  "generatedAt": "2026-05-04T23:20:39.355Z",
+  "generatedAt": "2026-05-04T23:24:38.603Z",
   "handbook": [
     {
       "index": "00",
@@ -134,7 +134,7 @@ window.VEGO_DATA = {
       "title": "語音讀報模式",
       "summary": "VEGO 寶典需要能在通勤、搭飛機、地鐵、高鐵或長時間工作後使用語音聆聽，避免一直盯著螢幕。第一階段先使用瀏覽器內建 Web Speech API 朗讀章節內容，不需要後端服務，也不會增加雲端成本。",
       "englishSummary": "Voice briefing mode lets users listen to handbook chapters while traveling or resting their eyes. The first version uses browser speech synthesis, with future upgrades for AI summaries, weekly briefings, offline audio, and role-based listening.",
-      "html": "<h3>語音讀報模式</h3>\n<p>VEGO 寶典需要能在通勤、搭飛機、地鐵、高鐵或長時間工作後使用語音聆聽，避免一直盯著螢幕。第一階段先使用瀏覽器內建 Web Speech API 朗讀章節內容，不需要後端服務，也不會增加雲端成本。</p>\n<h4>使用方式</h4>\n<ul>\n<li>打開任一寶典章節。</li>\n<li>在閱讀器上方選擇朗讀速度。</li>\n<li>按「朗讀」開始聆聽。</li>\n<li>需要中斷時按「暫停」或「停止」。</li>\n<li>切換章節時，系統會自動停止上一章朗讀，避免兩段音訊重疊。</li>\n</ul>\n<h4>適合場景</h4>\n<ul>\n<li>搭飛機時聽寶典重點。</li>\n<li>搭地鐵或高鐵時聽 AI Coding、物流 AGI、Skill Vault 更新。</li>\n<li>長時間看螢幕後，用耳朵複習知識庫。</li>\n<li>週末或睡前聽文章搜集區整理出的摘要。</li>\n</ul>\n<h4>現階段限制</h4>\n<ul>\n<li>語音品質取決於使用者裝置與瀏覽器。</li>\n<li>某些瀏覽器可能沒有繁中語音，會使用系統可用的中文或英文語音。</li>\n<li>網頁版朗讀通常需要使用者先點擊按鈕，不能自動播放。</li>\n<li>超長章節會先朗讀主要內容，未來可拆成段落佇列。</li>\n</ul>\n<h4>後續升級方向</h4>\n<h5>AI 摘要讀報</h5>\n<p>把長章節、外部文章、電子書摘要先壓縮成 3 到 8 分鐘的「通勤版重點」，再朗讀。</p>\n<h5>每週智庫播報</h5>\n<p>每週自動整理新增文章、Skill、物流自動化案例與 AGI 進展，產生一份「VEGO AI 智庫週報」。</p>\n<h5>離線音檔</h5>\n<p>未來可把重要章節轉成 MP3，讓搭飛機或網路不穩時也能聽。</p>\n<h5>角色化讀報</h5>\n<p>依照角色選擇播報內容：</p>\n<ul>\n<li>老闆模式：策略、風險、投資優先順序。</li>\n<li>工程模式：架構、測試、部署、Skill。</li>\n<li>營運模式：物流流程、異常、客服、關務、倉庫。</li>\n<li>學習模式：名詞、案例、練習題。</li>\n</ul>\n<h4>English Summary</h4>\n<p>Voice briefing mode lets users listen to handbook chapters while traveling or resting their eyes. The first version uses browser speech synthesis, with future upgrades for AI summaries, weekly briefings, offline audio, and role-based listening.</p>",
+      "html": "<h3>語音讀報模式</h3>\n<p>VEGO 寶典需要能在通勤、搭飛機、地鐵、高鐵或長時間工作後使用語音聆聽，避免一直盯著螢幕。第一階段先使用瀏覽器內建 Web Speech API 朗讀章節內容，不需要後端服務，也不會增加雲端成本。</p>\n<h4>使用方式</h4>\n<ul>\n<li>打開任一寶典章節。</li>\n<li>在閱讀器上方選擇朗讀速度。</li>\n<li>按「朗讀」開始聆聽。</li>\n<li>需要中斷時按「暫停」或「停止」。</li>\n<li>切換章節時，系統會自動停止上一章朗讀，避免兩段音訊重疊。</li>\n</ul>\n<h4>適合場景</h4>\n<ul>\n<li>搭飛機時聽寶典重點。</li>\n<li>搭地鐵或高鐵時聽 AI Coding、物流 AGI、Skill Vault 更新。</li>\n<li>長時間看螢幕後，用耳朵複習知識庫。</li>\n<li>週末或睡前聽文章搜集區整理出的摘要。</li>\n</ul>\n<h4>現階段限制</h4>\n<ul>\n<li>語音品質取決於使用者裝置與瀏覽器。</li>\n<li>某些瀏覽器可能沒有繁中語音，會使用系統可用的中文或英文語音。</li>\n<li>網頁版朗讀通常需要使用者先點擊按鈕，不能自動播放。</li>\n<li>超長章節會先朗讀主要內容，未來可拆成段落佇列。</li>\n</ul>\n<h4>後續升級方向</h4>\n<h5>Edge TTS 離線音檔</h5>\n<p>參考 VEGO 佛堂輔助工具的做法，重要章節可以用 Microsoft Edge TTS 預先轉成 MP3，放入 <code>/audio</code> 類資料夾，形成「線上朗讀 / 離線音檔」雙模式。這適合飛機、網路不穩、高鐵訊號弱或需要更穩定音質的場景。</p>\n<p>第一階段仍先使用瀏覽器 Web Speech API，因為寶典章節會快速迭代；等章節穩定後，再挑高價值內容轉成離線音檔。</p>\n<h5>AI 摘要讀報</h5>\n<p>把長章節、外部文章、電子書摘要先壓縮成 3 到 8 分鐘的「通勤版重點」，再朗讀。</p>\n<h5>每週智庫播報</h5>\n<p>每週自動整理新增文章、Skill、物流自動化案例與 AGI 進展，產生一份「VEGO AI 智庫週報」。</p>\n<h5>離線音檔</h5>\n<p>未來可把重要章節轉成 MP3，讓搭飛機或網路不穩時也能聽。</p>\n<h5>角色化讀報</h5>\n<p>依照角色選擇播報內容：</p>\n<ul>\n<li>老闆模式：策略、風險、投資優先順序。</li>\n<li>工程模式：架構、測試、部署、Skill。</li>\n<li>營運模式：物流流程、異常、客服、關務、倉庫。</li>\n<li>學習模式：名詞、案例、練習題。</li>\n</ul>\n<h4>English Summary</h4>\n<p>Voice briefing mode lets users listen to handbook chapters while traveling or resting their eyes. The first version uses browser speech synthesis, with future upgrades for AI summaries, weekly briefings, offline audio, and role-based listening.</p>",
       "path": "content/handbook/16-語音讀報模式.md"
     }
   ],
@@ -208,6 +208,16 @@ window.VEGO_DATA = {
       "risk": "low",
       "url": "",
       "path": "content/skills/customs-broker-review-packet/SKILL.md"
+    },
+    {
+      "name": "edge-tts-offline-briefing",
+      "author": "VEGO",
+      "category": "VEGO Skill",
+      "description": "將穩定版寶典章節規劃為 Edge TTS 離線 MP3 讀報包，適合飛機、高鐵與弱網環境。Use when creating offline audio briefings from stable handbook chapters.",
+      "status": "approved",
+      "risk": "medium",
+      "url": "",
+      "path": "content/skills/edge-tts-offline-briefing/SKILL.md"
     },
     {
       "name": "external-skill-converter",

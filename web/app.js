@@ -6,6 +6,7 @@ let currentChapterIndex = "";
 let activeUtterance = null;
 let speechChunks = [];
 let speechChunkIndex = 0;
+let speechStoppedByUser = false;
 
 const externalSkills = [
   ["ljg-skills", "李繼剛", "中文創作與認知", "寫作、思考、閱讀、認知卡片與概念拆解工具箱。", "external", "medium", "https://github.com/lijigang/ljg-skills"],
@@ -172,6 +173,20 @@ function setVoiceStatus(message) {
   if (status) status.textContent = message;
 }
 
+function setSpeechProgress(percent) {
+  const bar = document.querySelector("#speechProgress");
+  if (bar) bar.style.width = `${Math.max(0, Math.min(100, percent))}%`;
+}
+
+function updateSpeechControls() {
+  const rate = Number(document.querySelector("#speechRate")?.value || 0.9);
+  const volume = Number(document.querySelector("#speechVolume")?.value || 1);
+  const rateLabel = document.querySelector("#speechRateLabel");
+  const volumeLabel = document.querySelector("#speechVolumeLabel");
+  if (rateLabel) rateLabel.textContent = `${rate.toFixed(1)}x`;
+  if (volumeLabel) volumeLabel.textContent = `${Math.round(volume * 100)}%`;
+}
+
 function chapterSpeechText() {
   const title = document.querySelector("#chapterReaderTitle")?.textContent || "";
   const body = document.querySelector("#chapterReaderBody")?.innerText || "";
@@ -206,8 +221,11 @@ function preferredVoice() {
   const selected = document.querySelector("#speechVoice")?.value || "";
   const voices = availableVoices();
   if (selected && voices[Number(selected)]) return voices[Number(selected)];
+  const readerFriendly = /female|woman|ting|mei|hui|xiaoxiao|hanhan|yating|zira|samantha|natural/i;
   return (
+    voices.find((voice) => /zh-TW|zh-HK|zh/i.test(voice.lang) && readerFriendly.test(voice.name)) ||
     voices.find((voice) => /zh-TW|zh-HK|zh/i.test(voice.lang)) ||
+    voices.find((voice) => /en/i.test(voice.lang) && readerFriendly.test(voice.name)) ||
     voices.find((voice) => /en/i.test(voice.lang)) ||
     voices[0] ||
     null
@@ -215,12 +233,12 @@ function preferredVoice() {
 }
 
 function splitSpeechText(text) {
-  const sentences = text.match(/[^。！？!?；;]+[。！？!?；;]?/g) || [text];
+  const sentences = text.match(/[^。！？!?；;.\n]+[。！？!?；;.]?/g) || [text];
   const chunks = [];
   let current = "";
   for (const sentence of sentences) {
     const next = `${current}${sentence}`.trim();
-    if (next.length > 900 && current) {
+    if (next.length > 180 && current) {
       chunks.push(current);
       current = sentence.trim();
     } else {
@@ -234,24 +252,29 @@ function splitSpeechText(text) {
 function speakChunk() {
   if (!speechChunks.length || speechChunkIndex >= speechChunks.length) {
     setVoiceStatus("本章朗讀完成。");
+    setSpeechProgress(100);
     activeUtterance = null;
     return;
   }
+  updateSpeechControls();
   const voice = preferredVoice();
   activeUtterance = new SpeechSynthesisUtterance(speechChunks[speechChunkIndex]);
   activeUtterance.lang = voice?.lang || "zh-TW";
   activeUtterance.voice = voice || null;
-  activeUtterance.rate = Number(document.querySelector("#speechRate")?.value || 1);
+  activeUtterance.rate = Number(document.querySelector("#speechRate")?.value || 0.9);
   activeUtterance.pitch = 1;
-  activeUtterance.volume = 1;
-  activeUtterance.onstart = () =>
+  activeUtterance.volume = Number(document.querySelector("#speechVolume")?.value || 1);
+  activeUtterance.onstart = () => {
+    setSpeechProgress(Math.round((speechChunkIndex / speechChunks.length) * 100));
     setVoiceStatus(`正在朗讀第 ${speechChunkIndex + 1} / ${speechChunks.length} 段。`);
+  };
   activeUtterance.onend = () => {
     speechChunkIndex += 1;
+    setSpeechProgress(Math.round((speechChunkIndex / speechChunks.length) * 100));
     speakChunk();
   };
   activeUtterance.onerror = (event) => {
-    if (event.error === "interrupted" || event.error === "canceled") {
+    if (speechStoppedByUser || event.error === "interrupted" || event.error === "canceled") {
       return;
     }
     setVoiceStatus(`朗讀中斷：${event.error || "未知原因"}。請按「測試聲音」確認瀏覽器語音。`);
@@ -274,9 +297,11 @@ function readCurrentChapter() {
     setVoiceStatus("已繼續朗讀。");
     return;
   }
+  speechStoppedByUser = false;
   window.speechSynthesis.cancel();
   speechChunks = splitSpeechText(text);
   speechChunkIndex = 0;
+  setSpeechProgress(0);
   speakChunk();
 }
 
@@ -285,9 +310,11 @@ function testVoice() {
     setVoiceStatus("這個瀏覽器暫時不支援語音朗讀。");
     return;
   }
+  speechStoppedByUser = false;
   window.speechSynthesis.cancel();
   speechChunks = ["VEGO 寶典語音測試。如果你聽到這句話，表示語音功能可以使用。"];
   speechChunkIndex = 0;
+  setSpeechProgress(0);
   speakChunk();
 }
 
@@ -301,6 +328,7 @@ function pauseSpeech() {
 
 function stopSpeech(showStatus = true) {
   if (!speechSupported()) return;
+  speechStoppedByUser = true;
   if (window.speechSynthesis.paused) {
     window.speechSynthesis.resume();
   }
@@ -308,6 +336,7 @@ function stopSpeech(showStatus = true) {
   activeUtterance = null;
   speechChunks = [];
   speechChunkIndex = 0;
+  setSpeechProgress(0);
   if (showStatus) setVoiceStatus("已停止朗讀。");
 }
 
@@ -688,6 +717,15 @@ document.querySelector("#startVoiceBriefing").addEventListener("click", startVoi
 document.querySelector("#openVoiceChapter").addEventListener("click", openVoiceBriefingChapter);
 document.querySelector("#voiceFab").addEventListener("click", openVoiceBriefingChapter);
 document.querySelector("#speechRate").addEventListener("change", () => {
+  updateSpeechControls();
+  if (speechSupported() && window.speechSynthesis.speaking) {
+    readCurrentChapter();
+  }
+});
+document.querySelector("#speechRate").addEventListener("input", updateSpeechControls);
+document.querySelector("#speechVolume").addEventListener("input", updateSpeechControls);
+document.querySelector("#speechVolume").addEventListener("change", () => {
+  updateSpeechControls();
   if (speechSupported() && window.speechSynthesis.speaking) {
     readCurrentChapter();
   }
@@ -697,6 +735,7 @@ document.querySelector("#speechVoice").addEventListener("change", () => {
     readCurrentChapter();
   }
 });
+updateSpeechControls();
 if (speechSupported()) {
   populateVoiceOptions();
   window.speechSynthesis.onvoiceschanged = populateVoiceOptions;

@@ -13,6 +13,8 @@ const checks = [
       "readChapter",
       "testVoice",
       "speechVoice",
+      "speechVolume",
+      "speechProgress",
       "voiceFab",
       "voice-briefing",
       "startVoiceBriefing",
@@ -36,6 +38,7 @@ const checks = [
       "voice-launcher",
       "voice-panel",
       "voice-fab",
+      "voice-progress",
       "domain-grid"
     ]
   ],
@@ -77,6 +80,8 @@ const checks = [
       "startVoiceBriefing",
       "readCurrentChapter",
       "populateVoiceOptions",
+      "setSpeechProgress",
+      "updateSpeechControls",
       "testVoice",
       "speechSynthesis",
       "superpowers-zh"

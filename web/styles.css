@@ -563,10 +563,38 @@ button:disabled {
   font-weight: 800;
 }
 
+.voice-panel input[type="range"] {
+  flex: 1 1 120px;
+  min-height: auto;
+  accent-color: var(--accent);
+}
+
 .voice-panel select {
   min-height: 36px;
   max-width: 220px;
   min-width: 96px;
+}
+
+.voice-panel label span {
+  min-width: 42px;
+  color: var(--ink);
+  text-align: right;
+}
+
+.voice-progress {
+  height: 4px;
+  margin-top: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dce8e2;
+}
+
+.voice-progress div {
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 0.25s ease;
 }
 
 .voice-fab {
