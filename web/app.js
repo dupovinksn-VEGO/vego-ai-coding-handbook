@@ -151,7 +151,10 @@ function navigateChapter(direction) {
 
 function openVoiceBriefingChapter() {
   const chapters = window.VEGO_DATA?.handbook || [];
-  const voiceChapter = chapters.find((item) => item.title.includes("語音讀報")) || chapters.at(-1);
+  const voiceChapter =
+    chapters.find((item) => item.index === "16") ||
+    chapters.find((item) => item.path?.includes("16-")) ||
+    chapters.at(-1);
   if (voiceChapter) openChapter(voiceChapter.index);
 }
 
@@ -248,6 +251,9 @@ function speakChunk() {
     speakChunk();
   };
   activeUtterance.onerror = (event) => {
+    if (event.error === "interrupted" || event.error === "canceled") {
+      return;
+    }
     setVoiceStatus(`朗讀中斷：${event.error || "未知原因"}。請按「測試聲音」確認瀏覽器語音。`);
   };
   window.speechSynthesis.speak(activeUtterance);
@@ -263,7 +269,7 @@ function readCurrentChapter() {
     setVoiceStatus("請先打開一個寶典章節，再開始朗讀。");
     return;
   }
-  if (window.speechSynthesis.paused) {
+  if (window.speechSynthesis.speaking && window.speechSynthesis.paused) {
     window.speechSynthesis.resume();
     setVoiceStatus("已繼續朗讀。");
     return;
@@ -295,6 +301,9 @@ function pauseSpeech() {
 
 function stopSpeech(showStatus = true) {
   if (!speechSupported()) return;
+  if (window.speechSynthesis.paused) {
+    window.speechSynthesis.resume();
+  }
   window.speechSynthesis.cancel();
   activeUtterance = null;
   speechChunks = [];
@@ -677,6 +686,7 @@ document.querySelector("#stopSpeech").addEventListener("click", () => stopSpeech
 document.querySelector("#testVoice").addEventListener("click", testVoice);
 document.querySelector("#startVoiceBriefing").addEventListener("click", startVoiceBriefing);
 document.querySelector("#openVoiceChapter").addEventListener("click", openVoiceBriefingChapter);
+document.querySelector("#voiceFab").addEventListener("click", openVoiceBriefingChapter);
 document.querySelector("#speechRate").addEventListener("change", () => {
   if (speechSupported() && window.speechSynthesis.speaking) {
     readCurrentChapter();

@@ -13,6 +13,7 @@ const checks = [
       "readChapter",
       "testVoice",
       "speechVoice",
+      "voiceFab",
       "voice-briefing",
       "startVoiceBriefing",
       "智庫工具",
@@ -34,6 +35,7 @@ const checks = [
       "chapter-reader",
       "voice-launcher",
       "voice-panel",
+      "voice-fab",
       "domain-grid"
     ]
   ],
@@ -71,6 +73,7 @@ const checks = [
       "openChapter",
       "navigateChapter",
       "openVoiceBriefingChapter",
+      "item.index === \"16\"",
       "startVoiceBriefing",
       "readCurrentChapter",
       "populateVoiceOptions",
