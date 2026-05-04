@@ -480,6 +480,36 @@ button:disabled {
   gap: 10px;
 }
 
+.voice-launcher {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f8faf8, #eef6f2);
+  box-shadow: 0 8px 26px rgba(30, 46, 42, 0.06);
+  padding: clamp(16px, 3vw, 22px);
+}
+
+.voice-launcher h3 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.voice-launcher p {
+  margin: 0;
+}
+
+.voice-launcher-actions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
 .chapter-reader {
   margin-top: 22px;
   padding: clamp(18px, 3vw, 28px);
@@ -639,6 +669,15 @@ button:disabled {
   input,
   select,
   textarea {
+    width: 100%;
+  }
+
+  .voice-launcher {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .voice-launcher-actions {
     width: 100%;
   }
 

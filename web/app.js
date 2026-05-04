@@ -147,6 +147,17 @@ function navigateChapter(direction) {
   openChapter(chapters[next].index);
 }
 
+function openVoiceBriefingChapter() {
+  const chapters = window.VEGO_DATA?.handbook || [];
+  const voiceChapter = chapters.find((item) => item.title.includes("語音讀報")) || chapters.at(-1);
+  if (voiceChapter) openChapter(voiceChapter.index);
+}
+
+function startVoiceBriefing() {
+  openVoiceBriefingChapter();
+  readCurrentChapter();
+}
+
 function speechSupported() {
   return "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
 }
@@ -587,6 +598,8 @@ document.querySelector("#closeChapterReader").addEventListener("click", () => {
 document.querySelector("#readChapter").addEventListener("click", readCurrentChapter);
 document.querySelector("#pauseSpeech").addEventListener("click", pauseSpeech);
 document.querySelector("#stopSpeech").addEventListener("click", () => stopSpeech(true));
+document.querySelector("#startVoiceBriefing").addEventListener("click", startVoiceBriefing);
+document.querySelector("#openVoiceChapter").addEventListener("click", openVoiceBriefingChapter);
 document.querySelector("#speechRate").addEventListener("change", () => {
   if (speechSupported() && window.speechSynthesis.speaking) {
     readCurrentChapter();

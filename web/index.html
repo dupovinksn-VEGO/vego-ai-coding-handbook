@@ -22,6 +22,7 @@
       <nav class="nav" aria-label="Primary navigation">
         <a href="#handbook">寶典目錄</a>
         <a href="#logistics-map">物流智庫</a>
+        <a href="#voice-briefing">語音讀報</a>
         <a href="#skills">Skill Vault</a>
         <a href="#articles">文章搜集</a>
         <a href="#intelligence">智庫工具</a>
@@ -45,6 +46,7 @@
           </p>
           <div class="hero-actions">
             <a class="button primary" href="#handbook">閱讀知識庫</a>
+            <a class="button" href="#voice-briefing">語音讀報</a>
             <a class="button" href="#skills">瀏覽 Skill Vault</a>
           </div>
         </div>
@@ -150,6 +152,17 @@
           <h2>可閱讀、可套用、可迭代的知識庫</h2>
           <p>每章都從 Markdown 內容生成，可逐步深化為 VEGO 內部 AI Coding 操作手冊。</p>
         </div>
+        <article id="voice-briefing" class="voice-launcher">
+          <div>
+            <p class="eyebrow">Voice Briefing</p>
+            <h3>通勤、飛機、高鐵都能聽的寶典</h3>
+            <p>一鍵打開語音讀報章節並開始朗讀；也可以先選任一章，再用閱讀器上方的朗讀鍵播放。</p>
+          </div>
+          <div class="voice-launcher-actions">
+            <button class="button primary" id="startVoiceBriefing" type="button">開始語音讀報</button>
+            <button class="button" id="openVoiceChapter" type="button">打開語音章節</button>
+          </div>
+        </article>
         <div id="handbookGrid" class="chapter-grid"></div>
         <article id="chapterReader" class="chapter-reader" hidden>
           <div class="reader-toolbar">

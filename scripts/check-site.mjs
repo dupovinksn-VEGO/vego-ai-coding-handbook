@@ -11,6 +11,8 @@ const checks = [
       "chapterReader",
       "voiceStatus",
       "readChapter",
+      "voice-briefing",
+      "startVoiceBriefing",
       "智庫工具",
       "物流與供應鏈智庫地圖",
       "AI 自動化到物流 AGI",
@@ -28,6 +30,7 @@ const checks = [
       "queue-grid",
       "collector-layout",
       "chapter-reader",
+      "voice-launcher",
       "voice-panel",
       "domain-grid"
     ]
@@ -65,6 +68,8 @@ const checks = [
       "createSourceDraft",
       "openChapter",
       "navigateChapter",
+      "openVoiceBriefingChapter",
+      "startVoiceBriefing",
       "readCurrentChapter",
       "speechSynthesis",
       "superpowers-zh"
