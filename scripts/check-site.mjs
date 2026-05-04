@@ -9,6 +9,8 @@ const checks = [
       "English summary",
       "審核駕駛艙",
       "chapterReader",
+      "voiceStatus",
+      "readChapter",
       "智庫工具",
       "物流與供應鏈智庫地圖",
       "AI 自動化到物流 AGI",
@@ -26,6 +28,7 @@ const checks = [
       "queue-grid",
       "collector-layout",
       "chapter-reader",
+      "voice-panel",
       "domain-grid"
     ]
   ],
@@ -47,6 +50,8 @@ const checks = [
       "logistics-agent-domain-planner",
       "automation-opportunity-scanner",
       "robotics-workflow-bridge"
+      ,"語音讀報模式",
+      "voice-briefing-producer"
     ]
   ],
   [
@@ -60,6 +65,8 @@ const checks = [
       "createSourceDraft",
       "openChapter",
       "navigateChapter",
+      "readCurrentChapter",
+      "speechSynthesis",
       "superpowers-zh"
     ]
   ]

@@ -159,10 +159,28 @@
               <p id="chapterReaderProgress" class="summary">電子書閱讀模式</p>
             </div>
             <div class="reader-actions">
+              <button class="button" id="readChapter" type="button">朗讀</button>
+              <button class="button" id="pauseSpeech" type="button">暫停</button>
+              <button class="button" id="stopSpeech" type="button">停止</button>
               <button class="button" id="prevChapter" type="button">上一章</button>
               <button class="button" id="nextChapter" type="button">下一章</button>
               <button class="button" id="closeChapterReader" type="button">關閉</button>
             </div>
+          </div>
+          <div class="voice-panel" aria-live="polite">
+            <div>
+              <strong>語音讀報</strong>
+              <span id="voiceStatus">可在搭飛機、地鐵、高鐵時用瀏覽器朗讀章節內容。</span>
+            </div>
+            <label>
+              速度
+              <select id="speechRate" aria-label="Speech speed">
+                <option value="0.8">慢速</option>
+                <option value="1" selected>標準</option>
+                <option value="1.15">稍快</option>
+                <option value="1.3">快速</option>
+              </select>
+            </label>
           </div>
           <div id="chapterReaderBody" class="reader-body"></div>
         </article>

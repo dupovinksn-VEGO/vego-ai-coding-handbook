@@ -3,6 +3,7 @@ const SOURCE_STORAGE_KEY = "vegoIntelligenceSources";
 let currentDraft = "";
 let currentSourceDraft = "";
 let currentChapterIndex = "";
+let activeUtterance = null;
 
 const externalSkills = [
   ["ljg-skills", "李繼剛", "中文創作與認知", "寫作、思考、閱讀、認知卡片與概念拆解工具箱。", "external", "medium", "https://github.com/lijigang/ljg-skills"],
@@ -127,6 +128,7 @@ function openChapter(index) {
   const chapters = window.VEGO_DATA?.handbook || [];
   const chapter = chapters.find((item) => item.index === index);
   if (!chapter) return;
+  stopSpeech(false);
   currentChapterIndex = index;
   const position = chapters.findIndex((item) => item.index === index) + 1;
   document.querySelector("#chapterReaderTitle").textContent = `${chapter.index} ${chapter.title}`;
@@ -143,6 +145,74 @@ function navigateChapter(direction) {
   const next = current + direction;
   if (next < 0 || next >= chapters.length) return;
   openChapter(chapters[next].index);
+}
+
+function speechSupported() {
+  return "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+}
+
+function setVoiceStatus(message) {
+  const status = document.querySelector("#voiceStatus");
+  if (status) status.textContent = message;
+}
+
+function chapterSpeechText() {
+  const title = document.querySelector("#chapterReaderTitle")?.textContent || "";
+  const body = document.querySelector("#chapterReaderBody")?.innerText || "";
+  return `${title}\n\n${body}`.replace(/\s+/g, " ").trim();
+}
+
+function preferredVoice() {
+  const voices = window.speechSynthesis?.getVoices?.() || [];
+  return (
+    voices.find((voice) => /zh-TW|zh-HK|zh/i.test(voice.lang)) ||
+    voices.find((voice) => /en/i.test(voice.lang)) ||
+    voices[0] ||
+    null
+  );
+}
+
+function readCurrentChapter() {
+  if (!speechSupported()) {
+    setVoiceStatus("這個瀏覽器暫時不支援語音朗讀，建議改用 Chrome、Edge 或手機瀏覽器。");
+    return;
+  }
+  const text = chapterSpeechText();
+  if (!text) {
+    setVoiceStatus("請先打開一個寶典章節，再開始朗讀。");
+    return;
+  }
+  if (window.speechSynthesis.paused) {
+    window.speechSynthesis.resume();
+    setVoiceStatus("已繼續朗讀。");
+    return;
+  }
+  window.speechSynthesis.cancel();
+  activeUtterance = new SpeechSynthesisUtterance(text.slice(0, 18000));
+  activeUtterance.lang = "zh-TW";
+  activeUtterance.rate = Number(document.querySelector("#speechRate")?.value || 1);
+  activeUtterance.pitch = 1;
+  const voice = preferredVoice();
+  if (voice) activeUtterance.voice = voice;
+  activeUtterance.onstart = () => setVoiceStatus("正在朗讀本章。");
+  activeUtterance.onend = () => setVoiceStatus("本章朗讀完成。");
+  activeUtterance.onerror = () => setVoiceStatus("朗讀中斷，請再按一次朗讀。");
+  window.speechSynthesis.speak(activeUtterance);
+}
+
+function pauseSpeech() {
+  if (!speechSupported()) return;
+  if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+    window.speechSynthesis.pause();
+    setVoiceStatus("已暫停朗讀。");
+  }
+}
+
+function stopSpeech(showStatus = true) {
+  if (!speechSupported()) return;
+  window.speechSynthesis.cancel();
+  activeUtterance = null;
+  if (showStatus) setVoiceStatus("已停止朗讀。");
 }
 
 function renderCategoryOptions() {
@@ -511,7 +581,16 @@ document.querySelector("#handbookGrid").addEventListener("click", (event) => {
   if (index) openChapter(index);
 });
 document.querySelector("#closeChapterReader").addEventListener("click", () => {
+  stopSpeech(false);
   document.querySelector("#chapterReader").hidden = true;
+});
+document.querySelector("#readChapter").addEventListener("click", readCurrentChapter);
+document.querySelector("#pauseSpeech").addEventListener("click", pauseSpeech);
+document.querySelector("#stopSpeech").addEventListener("click", () => stopSpeech(true));
+document.querySelector("#speechRate").addEventListener("change", () => {
+  if (speechSupported() && window.speechSynthesis.speaking) {
+    readCurrentChapter();
+  }
 });
 document.querySelector("#prevChapter").addEventListener("click", () => navigateChapter(-1));
 document.querySelector("#nextChapter").addEventListener("click", () => navigateChapter(1));
