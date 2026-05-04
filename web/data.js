@@ -1,5 +1,5 @@
 window.VEGO_DATA = {
-  "generatedAt": "2026-05-04T22:40:10.858Z",
+  "generatedAt": "2026-05-04T22:47:45.524Z",
   "handbook": [
     {
       "index": "00",
@@ -120,6 +120,14 @@ window.VEGO_DATA = {
       "englishSummary": "VEGO's intelligence hub should grow into a logistics and supply-chain knowledge system that converts operating workflows, exceptions, compliance rules, and customer SOPs into searchable knowledge and reusable skills.",
       "html": "<h3>物流與供應鏈智庫</h3>\n<p>VEGO AI Coding 寶典要逐步從工具手冊升級成物流與供應鏈智庫。這個智庫的核心不是收藏資料，而是把物流營運中的流程、例外、判斷標準、系統模式與客戶 SOP 轉化成可搜尋、可審核、可套用的知識與 Skill。</p>\n<h4>領域分類</h4>\n<h5>Inbound</h5>\n<ul>\n<li>pre-alert</li>\n<li>PL / CI</li>\n<li>container</li>\n<li>devanning</li>\n<li>receiving</li>\n<li>inbound discrepancy</li>\n</ul>\n<p>重點：不能只看 parser 是否成功，還要看 downstream workflow 是否真的進入可操作狀態。</p>\n<h5>Warehouse</h5>\n<ul>\n<li>SKU</li>\n<li>inventory status</li>\n<li>lot / pallet / location</li>\n<li>putaway</li>\n<li>cycle count</li>\n<li>allocation</li>\n</ul>\n<p>重點：planning inventory 與可出貨庫存必須分清楚。PREVIEW 類狀態只能用於規劃，不能直接進出貨 allocation。</p>\n<h5>Outbound</h5>\n<ul>\n<li>order release</li>\n<li>pick / pack</li>\n<li>dispatch</li>\n<li>BOL</li>\n<li>POD</li>\n<li>carrier handoff</li>\n</ul>\n<p>重點：每個 handoff 都要留下狀態、責任人、時間與可驗證文件。</p>\n<h5>Customs</h5>\n<ul>\n<li>HTS</li>\n<li>broker review</li>\n<li>PL -&gt; CI</li>\n<li>regular cargo</li>\n<li>express / small parcel</li>\n<li>MCI / HAWB</li>\n</ul>\n<p>重點：regular cargo 與 express/small-parcel 是雙軌並行，不是互相替代。關務輸出要保持 broker-facing 文件正常可用。</p>\n<h5>Customer Operations</h5>\n<ul>\n<li>customer SOP</li>\n<li>exception management</li>\n<li>escalation rule</li>\n<li>customer draft</li>\n<li>service level</li>\n</ul>\n<p>重點：客戶可見訊息要保守、可審核，不承諾賠償或保證到貨。</p>\n<h5>Finance</h5>\n<ul>\n<li>quote lookup</li>\n<li>accessorial fee</li>\n<li>invoice gate</li>\n<li>billing exception</li>\n<li>rate rule</li>\n</ul>\n<p>重點：費用與 invoice send gate 必須可追蹤，不能因資料稀疏造成 crash。</p>\n<h4>知識入庫標準</h4>\n<p>一條物流知識要進入寶典，至少要包含：</p>\n<ul>\n<li>適用流程。</li>\n<li>觸發條件。</li>\n<li>需要的資料欄位。</li>\n<li>正常處理方式。</li>\n<li>常見錯誤。</li>\n<li>系統驗收方式。</li>\n<li>是否能轉成 Skill。</li>\n</ul>\n<h4>物流知識轉 Skill 的例子</h4>\n<pre><code>PL parsed but workflow blocked\n  -&gt; 分析 container status\n  -&gt; 分析 devanning sheet state\n  -&gt; 檢查 pre-dispatch snapshot\n  -&gt; 檢查 DM 是否能 review\n  -&gt; 產生 repair / handoff report</code></pre>\n<p>這類流程可以轉成 <code>pl-workflow-handoff-review</code> Skill。</p>\n<h4>English Summary</h4>\n<p>VEGO&#039;s intelligence hub should grow into a logistics and supply-chain knowledge system that converts operating workflows, exceptions, compliance rules, and customer SOPs into searchable knowledge and reusable skills.</p>",
       "path": "content/handbook/14-物流與供應鏈智庫.md"
+    },
+    {
+      "index": "15",
+      "title": "物流 AGI 領域架構",
+      "summary": "VEGO 智庫要從「AI Coding 寶典」繼續深化成物流、供應鏈、自動化與智能體的作戰地圖。這個架構的重點不是追逐名詞，而是把每個領域的資料、判斷、流程、責任邊界與驗收方式整理清楚，讓未來的 AI 自動化、機器人智能體與物流 AGI 都",
+      "englishSummary": "VEGO's logistics intelligence system should separate knowledge, automation, agents, robotics, control-tower orchestration, and human safety gates. This allows the handbook to evolve toward logistics AGI without losing traceability, compliance, or operational accountability.",
+      "html": "<h3>物流 AGI 領域架構</h3>\n<p>VEGO 智庫要從「AI Coding 寶典」繼續深化成物流、供應鏈、自動化與智能體的作戰地圖。這個架構的重點不是追逐名詞，而是把每個領域的資料、判斷、流程、責任邊界與驗收方式整理清楚，讓未來的 AI 自動化、機器人智能體與物流 AGI 都能在可控範圍內逐步落地。</p>\n<h4>領域分層</h4>\n<h5>1. 知識層</h5>\n<ul>\n<li>來源：文章、電子書、客戶 SOP、系統截圖、錯誤案例、會議紀錄、GitHub Skill。</li>\n<li>產出：智庫條目、流程卡、風險提示、可轉 Skill 候選。</li>\n<li>驗收：來源可追溯，內容已摘要，沒有未授權全文搬運，敏感資料已移除。</li>\n</ul>\n<h5>2. AI 自動化層</h5>\n<ul>\n<li>典型任務：PL/CI 抽取、狀態比對、異常分類、客戶回覆草稿、報表生成、SOP 檢查。</li>\n<li>產出：可重跑的自動化流程、輸入欄位、輸出格式、錯誤處理規則。</li>\n<li>驗收：能處理缺欄位、錯格式、重複資料與人工修正。</li>\n</ul>\n<h5>3. 智能體層</h5>\n<ul>\n<li>角色：Inbound Agent、Warehouse Agent、Customs Agent、Dispatch Agent、Customer Agent、Finance Agent。</li>\n<li>產出：每個 Agent 的職責、工具權限、可讀資料、可寫資料、交接條件。</li>\n<li>驗收：Agent 不越權，不直接對外承諾，不自行提交關務或付款動作。</li>\n</ul>\n<h5>4. 機器人協作層</h5>\n<ul>\n<li>場景：掃碼、盤點、揀貨、補貨、AMR 搬運、視覺檢查、稱重尺寸量測。</li>\n<li>產出：實體任務與 WMS 狀態的映射、設備事件、人工接管流程。</li>\n<li>驗收：每個現場任務都有定位資料、責任人、失敗回退與安全停止條件。</li>\n</ul>\n<h5>5. 物流 AGI 控制塔層</h5>\n<ul>\n<li>目標：跨領域規劃、異常預警、資源調度、方案模擬、風險排序。</li>\n<li>產出：多 Agent 協作策略、決策日誌、升級規則、人工批准閘。</li>\n<li>驗收：高風險決策保持 human-in-the-loop，所有建議能回溯資料來源與推理理由。</li>\n</ul>\n<h4>成熟度路線</h4>\n<h5>L0：資料收藏</h5>\n<p>把材料存起來，但還不能穩定檢索或套用。</p>\n<h5>L1：可搜尋知識庫</h5>\n<p>每份材料都有領域、摘要、來源、使用場景與風險標籤。</p>\n<h5>L2：Skill 輔助流程</h5>\n<p>把常見作業轉成可重複使用的 Skill，但只在 Sandbox 或人工監督下執行。</p>\n<h5>L3：半自動 Agent</h5>\n<p>Agent 可以讀資料、產生建議、生成草稿與檢查異常，但關鍵動作需要批准。</p>\n<h5>L4：多 Agent 協作</h5>\n<p>Inbound、Warehouse、Customs、Dispatch、Customer、Finance 等 Agent 可以透過明確交接條件協作。</p>\n<h5>L5：物流 AGI 控制塔</h5>\n<p>系統能做跨流程推理、方案比較與資源調度建議，並以合規、人審、可回溯為硬限制。</p>\n<h4>寶典建設原則</h4>\n<ul>\n<li>外部 Skill 一律先進 Sandbox Review。</li>\n<li>訂閱電子書與付費內容只做合法摘要、短摘錄與原創方法整理，不繞過授權限制。</li>\n<li>物流系統寫入、客戶訊息、關務申報、付款與刪除動作都需要人工批准。</li>\n<li>每個自動化流程都要有失敗樣本、壓力測試與回退方案。</li>\n<li>每個領域都要保留「人類營運判斷」欄位，避免只堆工具卻失去現場經驗。</li>\n</ul>\n<h4>下一步典藏任務</h4>\n<ul>\n<li>為六大營運領域各建立 10 個真實案例。</li>\n<li>把每個案例標記到知識層、自動化層、智能體層或機器人協作層。</li>\n<li>每週挑 2 到 3 個案例轉成 Sandbox Skill。</li>\n<li>每月整理一次物流 AGI 控制塔路線圖，確認哪些能力可以進入正式寶典。</li>\n</ul>\n<h4>English Summary</h4>\n<p>VEGO&#039;s logistics intelligence system should separate knowledge, automation, agents, robotics, control-tower orchestration, and human safety gates. This allows the handbook to evolve toward logistics AGI without losing traceability, compliance, or operational accountability.</p>",
+      "path": "content/handbook/15-物流AGI領域架構.md"
     }
   ],
   "skills": [
@@ -152,6 +160,16 @@ window.VEGO_DATA = {
       "risk": "low",
       "url": "",
       "path": "content/skills/architecture-review/SKILL.md"
+    },
+    {
+      "name": "automation-opportunity-scanner",
+      "author": "VEGO",
+      "category": "VEGO Skill",
+      "description": "掃描文章、系統流程或營運案例，找出可自動化、可轉 Skill、需要人審的物流 AI 機會。Use when evaluating automation candidates.",
+      "status": "approved",
+      "risk": "medium",
+      "url": "",
+      "path": "content/skills/automation-opportunity-scanner/SKILL.md"
     },
     {
       "name": "base-code-generator",
@@ -192,6 +210,16 @@ window.VEGO_DATA = {
       "risk": "medium",
       "url": "",
       "path": "content/skills/external-skill-converter/SKILL.md"
+    },
+    {
+      "name": "logistics-agent-domain-planner",
+      "author": "VEGO",
+      "category": "VEGO Skill",
+      "description": "將物流、供應鏈、關務、倉儲、客服、財務流程拆成可交接的 Agent 領域架構。Use when designing AI agents for logistics operations.",
+      "status": "approved",
+      "risk": "medium",
+      "url": "",
+      "path": "content/skills/logistics-agent-domain-planner/SKILL.md"
     },
     {
       "name": "logistics-exception-management",
@@ -252,6 +280,16 @@ window.VEGO_DATA = {
       "risk": "low",
       "url": "",
       "path": "content/skills/prompt-quality-review/SKILL.md"
+    },
+    {
+      "name": "robotics-workflow-bridge",
+      "author": "VEGO",
+      "category": "VEGO Skill",
+      "description": "將倉庫現場任務、WMS 狀態、掃碼設備、AMR 或視覺檢查轉成可驗收的機器人協作流程。Use when bridging warehouse operations and robotics.",
+      "status": "approved",
+      "risk": "medium",
+      "url": "",
+      "path": "content/skills/robotics-workflow-bridge/SKILL.md"
     }
   ],
   "articles": [
@@ -274,6 +312,16 @@ window.VEGO_DATA = {
       "risk": "low",
       "body": "# VEGO Logistics and Supply Chain Domain Map\n\n## 吸收目標\n\n把 VEGO 的物流、供應鏈、關務、倉儲、運輸、客服與財務流程整理成智庫主幹，後續所有外部文章、電子書、系統 URL 和 Skill 都可以掛到這張地圖上。\n\n## 領域\n\n- Inbound\n- Warehouse\n- Outbound\n- Customs\n- Customer Operations\n- Finance\n- Supply Chain Risk\n\n## 下一步\n\n1. 每個領域補 5 到 10 個真實流程案例。\n2. 每個流程至少生成 1 個 SOP。\n3. 每個 SOP 評估是否轉成 Skill。\n4. 每個 Skill 補測試案例和安全限制。\n\n## English Summary\n\nInternal source card for structuring VEGO's logistics and supply-chain intelligence system.",
       "path": "content/sources/logistics-domain-map.md"
+    },
+    {
+      "id": "content/sources/logistics-agi-domain-architecture.md",
+      "title": "VEGO Logistics AGI Domain Architecture",
+      "type": "system",
+      "url": "internal://vego-logistics-agi-domain-architecture",
+      "status": "sandbox",
+      "risk": "medium",
+      "body": "# VEGO Logistics AGI Domain Architecture\n\n## 吸收目標\n\n建立 VEGO 智庫的長期領域分層，讓文章、電子書、系統 URL、GitHub Skill 與營運案例都能被放到正確的位置，逐步支援 AI 自動化、智能體、機器人協作與物流 AGI 控制塔。\n\n## 領域分層\n\n- Knowledge：文章、SOP、案例、電子書摘要。\n- Automation：文件抽取、狀態比對、異常分類、報表與草稿。\n- Agents：Inbound、Warehouse、Customs、Dispatch、Customer、Finance。\n- Robotics：掃碼、盤點、AMR、視覺檢查、現場安全停止。\n- Control Tower：跨流程監控、模擬、調度建議、升級規則。\n- Safety：Sandbox Review、人工批准、合規邊界、責任追溯。\n\n## 下一步\n\n1. 每個來源進入智庫時，都標記所屬層級與營運領域。\n2. 每個 Skill 都補上使用限制、輸入、輸出、測試案例與是否可正式啟用。\n3. 每週更新時優先收集物流 AI、自動化、機器人、供應鏈 Agent 與關務智能化內容。\n\n## English Summary\n\nInternal source card for organizing VEGO's logistics AGI roadmap across knowledge, automation, agents, robotics, control tower, and safety layers.",
+      "path": "content/sources/logistics-agi-domain-architecture.md"
     }
   ],
   "sandboxSkills": [
