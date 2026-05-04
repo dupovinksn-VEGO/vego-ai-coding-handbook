@@ -1,5 +1,5 @@
 window.VEGO_DATA = {
-  "generatedAt": "2026-05-04T22:35:03.520Z",
+  "generatedAt": "2026-05-04T22:40:10.858Z",
   "handbook": [
     {
       "index": "00",
@@ -112,6 +112,14 @@ window.VEGO_DATA = {
       "englishSummary": "The intelligence hub links external books, subscribed content, and VEGO-owned systems into a reviewable pipeline for handbook knowledge and reusable skills.",
       "html": "<h3>智庫工具與外部電子書</h3>\n<p>VEGO AI Coding 寶典最重要的能力之一，是把外部知識和自己創建的系統轉化成可複用的知識、SOP 和 Skill。</p>\n<h4>外部電子書可以怎麼接入</h4>\n<p>可以：</p>\n<ul>\n<li>保存電子書或訂閱內容的連結。</li>\n<li>保存自己的閱讀筆記。</li>\n<li>保存短摘錄，用於定位重點。</li>\n<li>把內容改寫成自己的理解、方法論、檢查表。</li>\n<li>轉成 VEGO Skill 草稿。</li>\n</ul>\n<p>不可以：</p>\n<ul>\n<li>繞過 DRM 或 paywall。</li>\n<li>整本搬運到寶典。</li>\n<li>把未授權內容公開發布。</li>\n<li>將受限內容自動分享給第三方。</li>\n</ul>\n<h4>自有系統如何注入寶典</h4>\n<p>你可以把自己建立的系統 URL 放入智庫來源隊列，讓寶典記錄：</p>\n<ul>\n<li>這個系統解決什麼問題。</li>\n<li>哪些頁面、流程、錯誤處理值得學習。</li>\n<li>哪些 UI / API / data model pattern 可以轉成 Skill。</li>\n<li>哪些經驗可以反哺新項目 base code。</li>\n</ul>\n<p>第一階段只做 read-only 吸收，不修改原系統。</p>\n<h4>智庫吸收流程</h4>\n<ul>\n<li>建立來源卡。</li>\n<li>標記來源類型：system、ebook、article、github、docs。</li>\n<li>寫明吸收目標。</li>\n<li>生成摘要與方法論。</li>\n<li>抽取 Skill 候選。</li>\n<li>進 Sandbox Review。</li>\n<li>批准後升級為正式寶典內容或正式 Skill。</li>\n</ul>\n<h4>English Summary</h4>\n<p>The intelligence hub links external books, subscribed content, and VEGO-owned systems into a reviewable pipeline for handbook knowledge and reusable skills.</p>",
       "path": "content/handbook/13-智庫工具與外部電子書.md"
+    },
+    {
+      "index": "14",
+      "title": "物流與供應鏈智庫",
+      "summary": "VEGO AI Coding 寶典要逐步從工具手冊升級成物流與供應鏈智庫。這個智庫的核心不是收藏資料，而是把物流營運中的流程、例外、判斷標準、系統模式與客戶 SOP 轉化成可搜尋、可審核、可套用的知識與 Skill。",
+      "englishSummary": "VEGO's intelligence hub should grow into a logistics and supply-chain knowledge system that converts operating workflows, exceptions, compliance rules, and customer SOPs into searchable knowledge and reusable skills.",
+      "html": "<h3>物流與供應鏈智庫</h3>\n<p>VEGO AI Coding 寶典要逐步從工具手冊升級成物流與供應鏈智庫。這個智庫的核心不是收藏資料，而是把物流營運中的流程、例外、判斷標準、系統模式與客戶 SOP 轉化成可搜尋、可審核、可套用的知識與 Skill。</p>\n<h4>領域分類</h4>\n<h5>Inbound</h5>\n<ul>\n<li>pre-alert</li>\n<li>PL / CI</li>\n<li>container</li>\n<li>devanning</li>\n<li>receiving</li>\n<li>inbound discrepancy</li>\n</ul>\n<p>重點：不能只看 parser 是否成功，還要看 downstream workflow 是否真的進入可操作狀態。</p>\n<h5>Warehouse</h5>\n<ul>\n<li>SKU</li>\n<li>inventory status</li>\n<li>lot / pallet / location</li>\n<li>putaway</li>\n<li>cycle count</li>\n<li>allocation</li>\n</ul>\n<p>重點：planning inventory 與可出貨庫存必須分清楚。PREVIEW 類狀態只能用於規劃，不能直接進出貨 allocation。</p>\n<h5>Outbound</h5>\n<ul>\n<li>order release</li>\n<li>pick / pack</li>\n<li>dispatch</li>\n<li>BOL</li>\n<li>POD</li>\n<li>carrier handoff</li>\n</ul>\n<p>重點：每個 handoff 都要留下狀態、責任人、時間與可驗證文件。</p>\n<h5>Customs</h5>\n<ul>\n<li>HTS</li>\n<li>broker review</li>\n<li>PL -&gt; CI</li>\n<li>regular cargo</li>\n<li>express / small parcel</li>\n<li>MCI / HAWB</li>\n</ul>\n<p>重點：regular cargo 與 express/small-parcel 是雙軌並行，不是互相替代。關務輸出要保持 broker-facing 文件正常可用。</p>\n<h5>Customer Operations</h5>\n<ul>\n<li>customer SOP</li>\n<li>exception management</li>\n<li>escalation rule</li>\n<li>customer draft</li>\n<li>service level</li>\n</ul>\n<p>重點：客戶可見訊息要保守、可審核，不承諾賠償或保證到貨。</p>\n<h5>Finance</h5>\n<ul>\n<li>quote lookup</li>\n<li>accessorial fee</li>\n<li>invoice gate</li>\n<li>billing exception</li>\n<li>rate rule</li>\n</ul>\n<p>重點：費用與 invoice send gate 必須可追蹤，不能因資料稀疏造成 crash。</p>\n<h4>知識入庫標準</h4>\n<p>一條物流知識要進入寶典，至少要包含：</p>\n<ul>\n<li>適用流程。</li>\n<li>觸發條件。</li>\n<li>需要的資料欄位。</li>\n<li>正常處理方式。</li>\n<li>常見錯誤。</li>\n<li>系統驗收方式。</li>\n<li>是否能轉成 Skill。</li>\n</ul>\n<h4>物流知識轉 Skill 的例子</h4>\n<pre><code>PL parsed but workflow blocked\n  -&gt; 分析 container status\n  -&gt; 分析 devanning sheet state\n  -&gt; 檢查 pre-dispatch snapshot\n  -&gt; 檢查 DM 是否能 review\n  -&gt; 產生 repair / handoff report</code></pre>\n<p>這類流程可以轉成 <code>pl-workflow-handoff-review</code> Skill。</p>\n<h4>English Summary</h4>\n<p>VEGO&#039;s intelligence hub should grow into a logistics and supply-chain knowledge system that converts operating workflows, exceptions, compliance rules, and customer SOPs into searchable knowledge and reusable skills.</p>",
+      "path": "content/handbook/14-物流與供應鏈智庫.md"
     }
   ],
   "skills": [
@@ -166,6 +174,16 @@ window.VEGO_DATA = {
       "path": "content/skills/customer-friendly-ui-review/SKILL.md"
     },
     {
+      "name": "customs-broker-review-packet",
+      "author": "VEGO",
+      "category": "VEGO Skill",
+      "description": "生成或審查 broker-facing customs review packet。Use when PL/CI, HTS, broker review, regular cargo, or express small-parcel customs outputs must be prepared safely.",
+      "status": "approved",
+      "risk": "low",
+      "url": "",
+      "path": "content/skills/customs-broker-review-packet/SKILL.md"
+    },
+    {
       "name": "external-skill-converter",
       "author": "VEGO",
       "category": "VEGO Skill",
@@ -184,6 +202,26 @@ window.VEGO_DATA = {
       "risk": "low",
       "url": "",
       "path": "content/skills/logistics-exception-management/SKILL.md"
+    },
+    {
+      "name": "logistics-knowledge-ingestion",
+      "author": "VEGO",
+      "category": "VEGO Skill",
+      "description": "將物流、供應鏈、關務、倉儲、運輸、客服或財務內容整理成 VEGO 智庫條目。Use when a source should be converted into structured logistics knowledge and possible Skill candidates.",
+      "status": "approved",
+      "risk": "low",
+      "url": "",
+      "path": "content/skills/logistics-knowledge-ingestion/SKILL.md"
+    },
+    {
+      "name": "pl-workflow-handoff-review",
+      "author": "VEGO",
+      "category": "VEGO Skill",
+      "description": "檢查 PL parser 成功後 downstream workflow 是否真的可操作。Use when PL/CI parsing looks successful but devanning, dispatch, inventory, or invoice workflow is still blocked.",
+      "status": "approved",
+      "risk": "low",
+      "url": "",
+      "path": "content/skills/pl-workflow-handoff-review/SKILL.md"
     },
     {
       "name": "pr-review-logistics",
@@ -226,7 +264,18 @@ window.VEGO_DATA = {
       "path": "content/articles/2026-05-04-20-treasure-skills.md"
     }
   ],
-  "sources": [],
+  "sources": [
+    {
+      "id": "content/sources/logistics-domain-map.md",
+      "title": "VEGO Logistics and Supply Chain Domain Map",
+      "type": "system",
+      "url": "internal://vego-logistics-domain-map",
+      "status": "sandbox",
+      "risk": "low",
+      "body": "# VEGO Logistics and Supply Chain Domain Map\n\n## 吸收目標\n\n把 VEGO 的物流、供應鏈、關務、倉儲、運輸、客服與財務流程整理成智庫主幹，後續所有外部文章、電子書、系統 URL 和 Skill 都可以掛到這張地圖上。\n\n## 領域\n\n- Inbound\n- Warehouse\n- Outbound\n- Customs\n- Customer Operations\n- Finance\n- Supply Chain Risk\n\n## 下一步\n\n1. 每個領域補 5 到 10 個真實流程案例。\n2. 每個流程至少生成 1 個 SOP。\n3. 每個 SOP 評估是否轉成 Skill。\n4. 每個 Skill 補測試案例和安全限制。\n\n## English Summary\n\nInternal source card for structuring VEGO's logistics and supply-chain intelligence system.",
+      "path": "content/sources/logistics-domain-map.md"
+    }
+  ],
   "sandboxSkills": [
     {
       "name": "article-20-treasure-skills",

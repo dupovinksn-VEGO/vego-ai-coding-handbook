@@ -186,6 +186,7 @@ a {
 }
 
 .chapter-grid,
+.domain-grid,
 .skill-grid,
 .review-flow,
 .update-board,
@@ -197,6 +198,7 @@ a {
 }
 
 .chapter-card,
+.domain-card,
 .skill-card,
 .review-flow article,
 .update-board > div,
@@ -211,6 +213,7 @@ a {
 }
 
 .chapter-card,
+.domain-card,
 .skill-card,
 .review-flow article,
 .update-board > div,
@@ -220,6 +223,7 @@ a {
 }
 
 .chapter-card h3,
+.domain-card h3,
 .skill-card h3,
 .review-flow h3,
 .update-board h3 {
@@ -229,8 +233,15 @@ a {
 }
 
 .chapter-card p,
+.domain-card p,
 .skill-card p {
   margin: 0;
+}
+
+.domain-card {
+  display: grid;
+  gap: 9px;
+  padding: 18px;
 }
 
 .chapter-index,
@@ -557,6 +568,7 @@ button:disabled {
 @media (max-width: 920px) {
   .hero,
   .chapter-grid,
+  .domain-grid,
   .skill-grid,
   .review-flow,
   .update-board,
